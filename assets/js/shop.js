@@ -345,8 +345,9 @@
   const slip = $("[data-slip]");
   const sheetEl = $("[data-sheet]");
   const toggle = $("[data-toggle]");
+  const isOpen = () => slip.classList.contains("is-open");
   function openSheet() {
-    if (!sheetEl.hidden) return;
+    if (isOpen()) return;
     sheetEl.hidden = false;
     sheetEl.classList.remove("is-leaving");
     sheetEl.classList.add("is-entering");
@@ -356,18 +357,29 @@
     $("[data-sheet-title]").focus({ preventScroll: true });
   }
   function closeSheet(returnFocus = true) {
-    if (sheetEl.hidden) return;
+    if (!isOpen()) return;
     slip.classList.remove("is-open");
     toggle.setAttribute("aria-expanded", "false");
     $("[data-toggle-label]").textContent = "Review & send";
     const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
-    const done = () => { sheetEl.hidden = true; sheetEl.classList.remove("is-leaving", "is-entering"); };
+    let finished = false;
+    const done = () => {
+      if (finished || slip.classList.contains("is-open")) return; // reopened mid-fold
+      finished = true;
+      sheetEl.hidden = true;
+      sheetEl.classList.remove("is-leaving", "is-entering");
+    };
     if (reduce) done();
-    else { sheetEl.classList.remove("is-entering"); sheetEl.classList.add("is-leaving"); sheetEl.addEventListener("animationend", done, { once: true }); }
+    else {
+      sheetEl.classList.remove("is-entering");
+      sheetEl.classList.add("is-leaving");
+      sheetEl.addEventListener("animationend", done, { once: true });
+      setTimeout(done, 400); // backstop if animationend never arrives
+    }
     if (returnFocus) toggle.focus();
   }
-  toggle.addEventListener("click", () => (sheetEl.hidden ? openSheet() : closeSheet()));
-  document.addEventListener("keydown", (e) => { if (e.key === "Escape" && !sheetEl.hidden) closeSheet(); });
+  toggle.addEventListener("click", () => (isOpen() ? closeSheet() : openSheet()));
+  document.addEventListener("keydown", (e) => { if (e.key === "Escape" && isOpen()) closeSheet(); });
 
   /* ---------- sending ---------- */
   const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;

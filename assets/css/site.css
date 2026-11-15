@@ -300,10 +300,15 @@ html { scrollbar-color: var(--cloth-lilac) var(--paper); }
 }
 .sheet[hidden] { display: none; }
 .sheet.is-entering { animation: unfold 380ms var(--ease-out); }
-.sheet.is-leaving { animation: unfold 220ms var(--ease-out) reverse forwards; }
+.sheet.is-leaving { animation: fold 220ms cubic-bezier(0.7, 0, 0.84, 0) forwards; }
 @keyframes unfold {
   from { clip-path: inset(100% 0 0 0); transform: translateY(24px); }
   to { clip-path: inset(0 0 0 0); transform: none; }
+}
+/* A distinct name so closing always starts a fresh animation (and fires animationend). */
+@keyframes fold {
+  from { clip-path: inset(0 0 0 0); transform: none; }
+  to { clip-path: inset(100% 0 0 0); transform: translateY(24px); }
 }
 .slip.is-open .slip__bar { border-top-color: var(--rule); }
 .slip.is-open .slip__title { visibility: hidden; }
