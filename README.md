@@ -56,7 +56,9 @@ Settings (currency, the order key, the confirmation message) stay in `data/shop.
 2. Paste it into `settings.web3formsAccessKey` in `data/shop.json`.
 3. Write your own message for `settings.orderConfirmation`. Customers see it after sending, e.g. what happens next with pickup and payment.
 
-Until the key is set, the site tells customers sending isn't switched on yet. Order sheets and "tell me when it's back" requests both arrive as emails.
+Until the key is set, the site tells customers sending isn't switched on yet. Order sheets and "tell me when it's back" requests both arrive as emails. Hit reply on an order email to answer the customer directly.
+
+After sending, the customer sees their copy of the order on the page (items, total, notes, and your confirmation message), with a button to print or save it as a PDF. It stays on their device until they start a new sheet. The free Web3Forms plan can't email customers a confirmation.
 
 ## Preview on your computer
 

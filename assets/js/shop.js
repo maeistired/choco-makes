@@ -6,6 +6,7 @@
 
   const DATA_URL = "data/shop.json";
   const STORE_KEY = "chocomakes.sheet.v1";
+  const RECEIPT_KEY = "chocomakes.receipt.v1";
   const WEB3FORMS_URL = "https://api.web3forms.com/submit";
   const PLACEHOLDER_CONFIRMATION =
     "[Placeholder] Thanks, your order sheet has been sent to Choco Makes. (Owner: write what happens next in data/shop.json → settings.orderConfirmation.)";
@@ -16,6 +17,7 @@
   let shop = null;
   let money = null;
   let sheet = loadSheet();
+  let receipt = loadReceipt();
 
   /* ---------- helpers ---------- */
   function formatMoney(n) {
@@ -39,6 +41,21 @@
   function saveSheet() {
     try { localStorage.setItem(STORE_KEY, JSON.stringify(sheet)); } catch (_) { /* private mode */ }
   }
+  /* The customer's copy of their last sent sheet, kept until they start a new one. */
+  function loadReceipt() {
+    try {
+      const r = JSON.parse(localStorage.getItem(RECEIPT_KEY));
+      if (r && r.no && Array.isArray(r.lines)) return r;
+    } catch (_) { /* none */ }
+    return null;
+  }
+  function saveReceipt() {
+    try {
+      if (receipt) localStorage.setItem(RECEIPT_KEY, JSON.stringify(receipt));
+      else localStorage.removeItem(RECEIPT_KEY);
+    } catch (_) { /* private mode */ }
+  }
+  const showingReceipt = () => !!receipt && sheet.lines.length === 0;
   function announce(msg) {
     const el = $("[data-announce]");
     el.textContent = "";
@@ -275,6 +292,7 @@
 
   /* ---------- sheet ---------- */
   function addToSheet(p, variant) {
+    if (receipt) { receipt = null; saveReceipt(); }
     const stock = stockOf(p, variant);
     const line = findLine(p.id, variant);
     if (line) {
@@ -300,15 +318,40 @@
     syncAll();
   }
 
+  function renderReceipt() {
+    const r = receipt;
+    const when = new Intl.DateTimeFormat(shop.settings.locale || "en-CA", { dateStyle: "long" }).format(new Date(r.sentAt));
+    $("[data-receipt-meta]").textContent = `${when} · from ${r.name} · replies go to ${r.email}${r.phone ? ` or ${r.phone}` : ""}`;
+    $("[data-receipt-message]").textContent = (shop.settings.orderConfirmation || "").trim() || PLACEHOLDER_CONFIRMATION;
+    const list = $("[data-receipt-lines]");
+    list.textContent = "";
+    for (const l of r.lines) list.append(el("li", {}, el("span", { text: `${l.qty} × ${l.label}` }), el("span", { text: formatMoney(l.amount) })));
+    const totals = $("[data-receipt-totals]");
+    totals.textContent = "";
+    const row = (dt, dd, cls) => totals.append(el("div", cls ? { class: cls } : {}, el("dt", { text: dt }), el("dd", { text: dd })));
+    row("Items", formatMoney(r.subtotal));
+    if (r.savings > 0) row("Bundle pricing", `\u2212${formatMoney(r.savings)}`, "totals__save");
+    row("Total", `${formatMoney(r.total)} ${r.currency}`, "totals__grand");
+    $("[data-receipt-notes]").hidden = !r.notes;
+    $("[data-receipt-notes-text]").textContent = r.notes || "";
+  }
+
   function renderSheet(tick) {
     const { subtotal, total, savings, perLine } = priceTotals();
     const count = sheet.lines.reduce((a, l) => a + l.qty, 0);
-    $("[data-sheet-no]").textContent = `No. ${sheet.no}`;
-    $("[data-slip-no]").textContent = `No. ${sheet.no}`;
+    const done = showingReceipt();
+    const no = done ? receipt.no : sheet.no;
+    $("[data-sheet-no]").textContent = `No. ${no}`;
+    $("[data-slip-no]").textContent = `No. ${no}`;
+    $("[data-sheet-grid]").hidden = done;
+    $("[data-receipt]").hidden = !done;
+    if (done) renderReceipt();
+    setToggleLabel();
 
     const summary = $("[data-slip-summary]");
     summary.textContent = "";
-    if (count) summary.append(`${count} ${count === 1 ? "item" : "items"} · `, el("strong", { text: formatMoney(total) }), ` ${shop.settings.currency || "CAD"}`);
+    if (done) summary.append("Sent · your copy is saved");
+    else if (count) summary.append(`${count} ${count === 1 ? "item" : "items"} · `, el("strong", { text: formatMoney(total) }), ` ${shop.settings.currency || "CAD"}`);
     else summary.append("Nothing added yet");
     if (tick) { summary.classList.remove("tick"); void summary.offsetWidth; summary.classList.add("tick"); }
 
@@ -349,6 +392,9 @@
   const sheetEl = $("[data-sheet]");
   const toggle = $("[data-toggle]");
   const isOpen = () => slip.classList.contains("is-open");
+  function setToggleLabel() {
+    $("[data-toggle-label]").textContent = isOpen() ? "Fold away" : showingReceipt() ? "View your copy" : "Review & send";
+  }
   function openSheet() {
     if (isOpen()) return;
     sheetEl.hidden = false;
@@ -356,14 +402,14 @@
     sheetEl.classList.add("is-entering");
     slip.classList.add("is-open");
     toggle.setAttribute("aria-expanded", "true");
-    $("[data-toggle-label]").textContent = "Fold away";
+    setToggleLabel();
     $("[data-sheet-title]").focus({ preventScroll: true });
   }
   function closeSheet(returnFocus = true) {
     if (!isOpen()) return;
     slip.classList.remove("is-open");
     toggle.setAttribute("aria-expanded", "false");
-    $("[data-toggle-label]").textContent = "Review & send";
+    setToggleLabel();
     const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
     let finished = false;
     const done = () => {
@@ -383,6 +429,18 @@
   }
   toggle.addEventListener("click", () => (isOpen() ? closeSheet() : openSheet()));
   document.addEventListener("keydown", (e) => { if (e.key === "Escape" && isOpen()) closeSheet(); });
+
+  $("[data-receipt-print]").addEventListener("click", () => {
+    document.documentElement.classList.add("printing-receipt");
+    window.print();
+  });
+  window.addEventListener("afterprint", () => document.documentElement.classList.remove("printing-receipt"));
+  $("[data-receipt-new]").addEventListener("click", () => {
+    receipt = null;
+    saveReceipt();
+    renderSheet(false);
+    $("[data-sheet-title]").focus({ preventScroll: true });
+  });
 
   /* ---------- sending ---------- */
   const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -427,13 +485,17 @@
     status.className = "form-status";
     status.textContent = "";
     const nameIn = $("#order-name");
-    const contactIn = $("#order-contact");
+    const emailIn = $("#order-email");
+    const phoneIn = $("#order-phone");
     const nameOk = nameIn.value.trim().length > 0;
-    const contactOk = validContact(contactIn.value);
+    const emailOk = EMAIL_RE.test(emailIn.value.trim());
+    const phoneOk = !phoneIn.value.trim() || phoneIn.value.replace(/\D/g, "").length >= 7;
     setFieldError(nameIn, nameOk ? "" : "Add your name so the maker knows who the order is from.");
-    setFieldError(contactIn, contactOk ? "" : "Add a phone number or an email address the maker can reply to.");
+    setFieldError(emailIn, emailOk ? "" : "Add an email address the maker can reply to, like name@example.com.");
+    setFieldError(phoneIn, phoneOk ? "" : "Check the phone number, or leave it empty.");
     if (!nameOk) return nameIn.focus();
-    if (!contactOk) return contactIn.focus();
+    if (!emailOk) return emailIn.focus();
+    if (!phoneOk) return phoneIn.focus();
     if (!sheet.lines.length) return;
     if ($("input[name=botcheck]", orderForm).checked) return;
 
@@ -444,10 +506,16 @@
       return `${l.qty} × ${p.name}${l.variant ? ` (${l.variant})` : ""} @ ${formatMoney(p.price)}`;
     });
     const bundleRows = dealTotals.map((d) => `${d.label.charAt(0).toUpperCase()}${d.label.slice(1)}: ${d.qty} for ${formatMoney(d.t)} with bundle pricing`);
-    const contact = contactIn.value.trim();
+    const name = nameIn.value.trim();
+    const email = emailIn.value.trim();
+    const phone = phoneIn.value.trim();
     const notes = $("#order-notes").value.trim();
     const text = [
-      `Order sheet No. ${sheet.no}`, "",
+      `Order sheet No. ${sheet.no}`,
+      `From: ${name}`,
+      `Email: ${email}`,
+      ...(phone ? [`Phone: ${phone}`] : []),
+      "",
       ...rows, "",
       ...(bundleRows.length ? [...bundleRows, ""] : []),
       `Items: ${formatMoney(subtotal)}`,
@@ -461,22 +529,31 @@
     send.textContent = "Sending…";
     try {
       await submitToOwner({
-        subject: `Order sheet No. ${sheet.no} from ${nameIn.value.trim()}`,
-        name: nameIn.value.trim(),
-        contact,
-        ...(contact.includes("@") ? { email: contact } : {}),
+        subject: `Order sheet No. ${sheet.no} from ${name}`,
+        name,
+        email,
+        ...(phone ? { phone } : {}),
         order: text,
         ...(notes ? { notes } : {}),
         total: `${formatMoney(total)} ${cur}`,
       });
-      const sentNo = sheet.no;
+      receipt = {
+        no: sheet.no, sentAt: new Date().toISOString(), name, email, phone, notes,
+        lines: sheet.lines.map((l) => {
+          const p = product(l.id);
+          return { label: `${p.name}${l.variant ? `, ${l.variant}` : ""}`, qty: l.qty, amount: l.qty * p.price };
+        }),
+        subtotal, savings, total, currency: cur,
+      };
+      saveReceipt();
       sheet = { no: newSheetNo(), lines: [] };
       saveSheet();
+      orderForm.reset();
       renderSheet(true);
       syncAll();
-      orderForm.reset();
-      status.className = "form-status is-done";
-      status.textContent = `Sheet No. ${sentNo} sent. ${(shop.settings.orderConfirmation || "").trim() || PLACEHOLDER_CONFIRMATION}`;
+      $("[data-receipt-title]").focus({ preventScroll: true });
+      $("[data-sheet]").scrollTop = 0;
+      announce(`Order sheet No. ${receipt.no} sent. Your copy is shown on the sheet.`);
     } catch (err) {
       status.className = "form-status is-error";
       status.textContent = failureMessage(err);

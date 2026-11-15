@@ -98,7 +98,7 @@
           <h2 class="sheet__title" tabindex="-1" data-sheet-title>Order sheet <span class="sheet__no" data-sheet-no></span></h2>
         </div>
 
-        <div class="sheet__grid">
+        <div class="sheet__grid" data-sheet-grid>
           <div class="sheet__lines">
             <ul class="lines" data-lines></ul>
             <p class="lines__empty" data-empty>Nothing on your sheet yet. Add something from the shop and it will appear here.</p>
@@ -117,10 +117,16 @@
               <p class="field__error" id="order-name-error" hidden></p>
             </div>
             <div class="field">
-              <label for="order-contact">Phone or email</label>
-              <input id="order-contact" name="contact" autocomplete="email" inputmode="email" required aria-describedby="order-contact-hint">
-              <p class="field__hint" id="order-contact-hint">So the maker can reply to you.</p>
-              <p class="field__error" id="order-contact-error" hidden></p>
+              <label for="order-email">Email</label>
+              <input id="order-email" name="email" type="email" autocomplete="email" required aria-describedby="order-email-hint">
+              <p class="field__hint" id="order-email-hint">So the maker can reply to you.</p>
+              <p class="field__error" id="order-email-error" hidden></p>
+            </div>
+            <div class="field">
+              <label for="order-phone">Phone <span class="field__optional">(optional)</span></label>
+              <input id="order-phone" name="phone" type="tel" autocomplete="tel" aria-describedby="order-phone-hint">
+              <p class="field__hint" id="order-phone-hint">If you'd rather get a text or a call.</p>
+              <p class="field__error" id="order-phone-error" hidden></p>
             </div>
             <div class="field">
               <label for="order-notes">Notes <span class="field__optional">(optional)</span></label>
@@ -131,6 +137,26 @@
             <button class="button button--wide" type="submit" data-send>Send order sheet</button>
             <p class="form-status" data-form-status role="status" aria-live="polite"></p>
           </form>
+        </div>
+
+        <!-- Shown after sending: the customer's copy of what they sent -->
+        <div class="receipt" data-receipt hidden>
+          <div class="receipt__main">
+            <h3 class="receipt__title" tabindex="-1" data-receipt-title>Sent to Choco Makes</h3>
+            <p class="receipt__meta" data-receipt-meta></p>
+            <ul class="receipt__lines" data-receipt-lines></ul>
+            <dl class="totals" data-receipt-totals></dl>
+            <div class="receipt__notes" data-receipt-notes hidden>
+              <h4>Your notes</h4>
+              <p data-receipt-notes-text></p>
+            </div>
+          </div>
+          <div class="receipt__side">
+            <p class="receipt__message" data-receipt-message></p>
+            <button class="button button--wide" type="button" data-receipt-print>Print or save as PDF</button>
+            <button class="button button--quiet button--wide" type="button" data-receipt-new>Start a new sheet</button>
+            <p class="receipt__keep">This copy stays on this device until you start a new sheet.</p>
+          </div>
         </div>
       </div>
     </div>

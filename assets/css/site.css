@@ -354,6 +354,37 @@ html { scrollbar-color: var(--cloth-lilac) var(--paper); }
 .totals[hidden], [data-savings-row][hidden] { display: none; }
 
 .sheet__form { display: grid; gap: var(--s4); align-content: start; }
+
+/* Receipt: the customer's copy after sending */
+.receipt { display: grid; grid-template-columns: 7fr 5fr; gap: var(--s8); padding-top: var(--s5); }
+.receipt[hidden] { display: none; }
+.receipt__title { font: 400 1.5rem/1.2 var(--serif); }
+.receipt__title:focus { outline: none; }
+.receipt__meta { margin-top: var(--s2); font-size: 0.875rem; color: var(--ink-soft); }
+.receipt__lines { margin-top: var(--s4); border-top: 1px solid var(--rule); }
+.receipt__lines li { display: flex; justify-content: space-between; gap: var(--s4); padding-block: var(--s3); border-bottom: 1px solid var(--rule); font-variant-numeric: tabular-nums; }
+.receipt__notes { margin-top: var(--s5); }
+.receipt__notes h4 { font-size: 0.8125rem; font-weight: 600; }
+.receipt__notes p { margin-top: var(--s1); white-space: pre-wrap; }
+.receipt__side { display: grid; gap: var(--s3); align-content: start; }
+.receipt__message { padding: var(--s4); background: var(--paper); margin-bottom: var(--s2); }
+.receipt__keep { font-size: 0.8125rem; color: var(--ink-soft); }
+@media (max-width: 960px) { .receipt { grid-template-columns: 1fr; gap: var(--s6); } }
+
+/* Printing the receipt: only the sheet head and the receipt, on plain paper */
+@media print {
+  .printing-receipt body > :not(.slip),
+  .printing-receipt .slip__copy, .printing-receipt .slip__bar,
+  .printing-receipt .sheet__grid, .printing-receipt .receipt__side .button, .printing-receipt .receipt__keep { display: none !important; }
+  .printing-receipt body { background: #fff; }
+  .printing-receipt .slip { position: static; display: block; }
+  .printing-receipt .sheet, .printing-receipt .sheet[hidden] {
+    display: block !important; position: static; max-height: none; overflow: visible;
+    box-shadow: none; border: 0; animation: none; clip-path: none;
+  }
+  .printing-receipt .receipt { grid-template-columns: 1fr; gap: var(--s5); }
+  .printing-receipt .receipt__side { order: -1; }
+}
 .sheet__intro { color: var(--ink-soft); }
 .field { display: grid; gap: var(--s1); }
 .field label { font-size: 0.875rem; font-weight: 600; }
