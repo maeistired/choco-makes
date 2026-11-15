@@ -8,15 +8,16 @@ Your stock lives in two spreadsheets in **`inventory/`**. Open them in Numbers, 
 
 ### 1. `inventory/products.csv`: one row per variant
 
-| id | name | category | price | bundle_qty | bundle_price | deal_group | cloth | featured | variant_label | variant | stock | description |
-|---|---|---|---|---|---|---|---|---|---|---|---|---|
-| handmade-notebook | Handmade notebook | Notebooks | 10.50 | 2 | 18 | | lilac | yes | Pages | Cream | 4 | |
-| handmade-notebook | Handmade notebook | | | | | | | | | White | 6 | |
-| clicker-creeper | Clicker creeper | Fidgets | 7.50 | 2 | 13 | fidgets | blue | | | | 3 | |
-| single-key-clicker | Single key clicker | Fidgets | 7.50 | 2 | 13 | fidgets | stone | | | | 10 | |
+| id | name | category | price | bundle_qty | bundle_price | deal_group | cloth | featured | variant_label | variant | variant_note | stock | description |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| handmade-notebook | Handmade notebook | Notebooks | 10.50 | 2 | 18 | | lilac | yes | Pages | Cream | | 7 | |
+| handmade-notebook | Handmade notebook | | | | | | | | | White | | 10 | |
+| clicker-creeper | Clicker creeper | Fidgets | 7.50 | 2 | 13 | fidgets | blue | | | | | 20 | |
+| keycap-keychain | Keycap keychain | Fidgets | 7.50 | 2 | 13 | fidgets | stone | | Colour | Water | More colours coming soon | 10 | |
 
 - **A product with variants** (like cream or white pages) takes one row per variant, all with the same `id` and `name`. Fill in price, category and so on once, on the first row only. Each row has its own `stock`.
 - **A product with no variants** is one row with `variant` left empty.
+- **variant_note** (optional, first row only): a short line under the choices, e.g. `More colours coming soon`.
 - **id**: lowercase with dashes. Leave it blank and it's made from the name. Don't change it once people have ordered, because saved order sheets use it.
 - **price / bundle_price**: in CAD, `7.50` or `$7.50`. `bundle_qty` + `bundle_price` = "buy 2 for $13", counted across a product's variants.
 - **deal_group** (optional): products with the same deal group share one deal, so customers can mix and match. For example, with `fidgets` on both clickers, one creeper plus one key clicker is $13. Every product in a group needs the same bundle numbers. The site shows "any 2 fidgets for $13".

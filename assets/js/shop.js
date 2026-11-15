@@ -218,6 +218,9 @@
         input.addEventListener("change", () => syncProduct(node, p));
         opts.append(label);
       });
+      const note = $("[data-variant-note]", node);
+      note.textContent = p.variantNote || "";
+      note.hidden = !p.variantNote;
     }
 
     $("[data-add]", node).addEventListener("click", () => addToSheet(p, selectedVariant(node, p)));

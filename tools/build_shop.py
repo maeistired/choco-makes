@@ -126,6 +126,8 @@ def build_products():
                 p["featured"] = True
             if row.get("variant"):
                 p["variantLabel"] = row.get("variant_label") or "Option"
+                if row.get("variant_note"):
+                    p["variantNote"] = row["variant_note"]
                 p["variants"] = []
             products[pid] = p
             order.append(pid)
@@ -148,6 +150,8 @@ def build_products():
         else:
             if variant:
                 errors.append(f"{where}: '{name}' has a variant here but not on its first row")
+            elif row.get("variant_note"):
+                errors.append(f"{where}: '{name}' has a variant_note but no variants")
             elif "stock" in p:
                 errors.append(f"{where}: '{name}' appears twice without variants")
             else:

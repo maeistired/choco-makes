@@ -50,8 +50,8 @@
       "stock": 20
     },
     {
-      "id": "single-key-clicker",
-      "name": "Single key clicker",
+      "id": "keycap-keychain",
+      "name": "Keycap keychain",
       "category": "Fidgets",
       "price": 7.5,
       "bundle": {
@@ -61,7 +61,14 @@
       },
       "photo": "",
       "cloth": "stone",
-      "stock": 10
+      "variantLabel": "Colour",
+      "variantNote": "More colours coming soon",
+      "variants": [
+        {
+          "name": "Water",
+          "stock": 10
+        }
+      ]
     }
   ],
   "updates": []

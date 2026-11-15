@@ -1,5 +1,5 @@
-id,name,category,price,bundle_qty,bundle_price,deal_group,cloth,featured,variant_label,variant,stock,description
-handmade-notebook,Handmade notebook,Notebooks,10.50,2,18,,lilac,yes,Pages,Cream,7,
-handmade-notebook,Handmade notebook,,,,,,,,,White,10,
-clicker-creeper,Clicker creeper,Fidgets,7.50,2,13,fidgets,blue,,,,20,
-single-key-clicker,Single key clicker,Fidgets,7.50,2,13,fidgets,stone,,,,10,
+id,name,category,price,bundle_qty,bundle_price,deal_group,cloth,featured,variant_label,variant,variant_note,stock,description
+handmade-notebook,Handmade notebook,Notebooks,10.50,2,18,,lilac,yes,Pages,Cream,,7,
+handmade-notebook,Handmade notebook,,,,,,,,,White,,10,
+clicker-creeper,Clicker creeper,Fidgets,7.50,2,13,fidgets,blue,,,,,20,
+keycap-keychain,Keycap keychain,Fidgets,7.50,2,13,fidgets,stone,,Colour,Water,More colours coming soon,10,

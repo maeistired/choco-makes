@@ -202,6 +202,7 @@ html { scrollbar-color: var(--cloth-lilac) var(--paper); }
 .variants { border: 0; margin: var(--s4) 0 0; padding: 0; min-width: 0; }
 .variants__legend { padding: 0; font-size: 0.8125rem; font-weight: 600; margin-bottom: var(--s2); }
 .variants__options { display: flex; flex-wrap: wrap; gap: var(--s2); }
+.variants__note { margin-top: var(--s2); font-size: 0.8125rem; color: var(--ink-soft); }
 .variant { position: relative; }
 .variant input { position: absolute; opacity: 0; inset: 0; margin: 0; cursor: pointer; }
 .variant span {
