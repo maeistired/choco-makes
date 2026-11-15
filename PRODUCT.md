@@ -47,13 +47,15 @@ A small independent maker of handmade notebooks and 3D-printed clicker fidgets. 
 **Decided (owner, 2026-11-15):**
 - Structure: a single scrolling page (shop, updates, about, order sheet), one link to share.
 - Order delivery: Web3Forms, emailed to the owner. Sold-out interest requests use the same channel.
+- Pickup: on campus, arranged by email after the order sheet arrives.
+- Payment: e-Transfer, contactless at pickup, or cash (change not guaranteed). Nothing is charged online.
 - Inventory: an edited data file in the repo (products data), committed to update the site.
 - Post-order confirmation copy: the owner writes it; ship a clearly marked placeholder until then.
 - Currency: Canadian dollars (CAD).
 - Customer updates: short dated notes, newest first, kept in the same data file as products.
 
 **Open decisions (do not assume):**
-- Pickup, delivery, and payment. Undecided; the shop is currently unofficial.
+- Delivery or shipping. Not offered; undecided beyond on-campus pickup.
 - Domain name.
 
 **Change policy:** the owner must approve any feature, content, or suggestion beyond what's listed here before it is built.
