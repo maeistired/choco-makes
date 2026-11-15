@@ -2,3 +2,7 @@
 .impeccable/review/
 .impeccable/config.local.json
 .impeccable/hook.cache.json
+
+# Original photos stay local; resized copies in assets/img/products/ are published
+photos/*
+!photos/.gitkeep

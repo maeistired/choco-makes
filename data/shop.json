@@ -3,75 +3,66 @@
     "currency": "CAD",
     "locale": "en-CA",
     "web3formsAccessKey": "1cf9024c-fffb-4479-85a0-e53346d4c370",
+    "lowStockAt": 5,
     "orderConfirmation": ""
   },
-
-  "categories": ["Notebooks", "Clickers"],
-
+  "categories": [
+    "Notebooks",
+    "Fidgets"
+  ],
   "products": [
     {
-      "id": "sample-notebook-a5",
-      "sample": true,
-      "featured": true,
-      "name": "Sample notebook, A5",
+      "id": "handmade-notebook",
+      "name": "Handmade notebook",
       "category": "Notebooks",
-      "price": 18,
-      "bundle": { "qty": 2, "price": 32 },
-      "description": "Placeholder listing. Replace this with a real notebook in data/shop.json.",
+      "price": 10.5,
+      "bundle": {
+        "qty": 2,
+        "price": 18
+      },
       "photo": "",
       "cloth": "lilac",
-      "variantLabel": "Cover",
+      "featured": true,
+      "variantLabel": "Pages",
       "variants": [
-        { "name": "Lilac", "stock": 4 },
-        { "name": "Pink", "stock": 0 },
-        { "name": "Blue", "stock": 7 }
+        {
+          "name": "Cream",
+          "stock": 7
+        },
+        {
+          "name": "White",
+          "stock": 10
+        }
       ]
     },
     {
-      "id": "sample-notebook-pocket",
-      "sample": true,
-      "name": "Sample pocket notebook",
-      "category": "Notebooks",
-      "price": 9,
-      "description": "Placeholder listing that shows the sold-out state.",
-      "photo": "",
-      "cloth": "pink",
-      "stock": 0
-    },
-    {
-      "id": "sample-clicker-round",
-      "sample": true,
-      "name": "Sample round clicker",
-      "category": "Clickers",
-      "price": 8,
-      "bundle": { "qty": 2, "price": 14 },
-      "description": "Placeholder listing. Replace this with a real clicker fidget in data/shop.json.",
+      "id": "clicker-creeper",
+      "name": "Clicker creeper",
+      "category": "Fidgets",
+      "price": 7.5,
+      "bundle": {
+        "qty": 2,
+        "price": 13,
+        "group": "fidgets"
+      },
       "photo": "",
       "cloth": "blue",
-      "variantLabel": "Colour",
-      "variants": [
-        { "name": "Lilac", "stock": 12 },
-        { "name": "Sky", "stock": 5 }
-      ]
+      "stock": 20
     },
     {
-      "id": "sample-clicker-key",
-      "sample": true,
-      "name": "Sample key clicker",
-      "category": "Clickers",
-      "price": 10,
-      "description": "Placeholder listing with a low stock count.",
+      "id": "single-key-clicker",
+      "name": "Single key clicker",
+      "category": "Fidgets",
+      "price": 7.5,
+      "bundle": {
+        "qty": 2,
+        "price": 13,
+        "group": "fidgets"
+      },
       "photo": "",
       "cloth": "stone",
-      "stock": 2
+      "stock": 10
     }
   ],
-
-  "updates": [
-    {
-      "date": "2026-11-15",
-      "sample": true,
-      "text": "Sample update: the shop is being set up. Real stock and photos are coming soon."
-    }
-  ]
+  "updates": []
 }

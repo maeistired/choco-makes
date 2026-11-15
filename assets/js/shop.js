@@ -79,35 +79,54 @@
   const lineKey = (id, variant) => `${id}::${variant || ""}`;
   const findLine = (id, variant) => sheet.lines.find((l) => lineKey(l.id, l.variant) === lineKey(id, variant));
 
-  /* Bundle ("buy N for $X") applies per product, across its variants. */
+  /* Public stock wording: exact counts stay private. */
+  const lowAt = () => Number(shop.settings.lowStockAt) || 5;
+  const isLow = (n) => n > 0 && n <= lowAt();
+  function stockWord(n) {
+    if (n <= 0) return "All gone for now";
+    if (n <= 2) return "1–2 left";
+    return n <= lowAt() ? "Low stock" : "In stock";
+  }
+
+  /* A bundle counts across a product's variants, and across every product
+     sharing the same bundle group (e.g. any 2 fidgets for $13). */
+  const dealPool = (p) => (p.bundle && p.bundle.group) || p.id;
+  function dealText(p) {
+    if (!p.bundle) return "";
+    const { qty, price, group } = p.bundle;
+    return group ? `any ${qty} ${group} for ${formatMoney(price)}` : `${qty} for ${formatMoney(price)}`;
+  }
+
+  const cents = (n) => Math.round(n * 100) / 100;
   function priceTotals() {
     let subtotal = 0, total = 0;
     const perLine = new Map();
-    const byProduct = new Map();
+    const pools = new Map();
     for (const l of sheet.lines) {
       const p = product(l.id);
       if (!p) continue;
-      byProduct.set(p.id, (byProduct.get(p.id) || 0) + l.qty);
+      // lines show full price; bundle pricing is shown once as its own row
+      perLine.set(lineKey(l.id, l.variant), l.qty * p.price);
+      subtotal += l.qty * p.price;
+      const key = dealPool(p);
+      if (!pools.has(key)) pools.set(key, { bundle: p.bundle, label: (p.bundle && p.bundle.group) || p.name, prices: [] });
+      for (let i = 0; i < l.qty; i++) pools.get(key).prices.push(p.price);
     }
-    const productTotals = new Map();
-    for (const [id, qty] of byProduct) {
-      const p = product(id);
-      const full = qty * p.price;
+    const dealTotals = [];
+    for (const { bundle: b, label, prices } of pools.values()) {
+      prices.sort((x, y) => y - x); // the deal covers the dearest items first
+      const sum = (arr) => arr.reduce((a, x) => a + x, 0);
+      const full = sum(prices);
       let t = full;
-      if (p.bundle && p.bundle.qty > 1 && p.bundle.price != null) {
-        const sets = Math.floor(qty / p.bundle.qty);
-        t = sets * p.bundle.price + (qty - sets * p.bundle.qty) * p.price;
+      if (b && b.qty > 1 && b.price != null) {
+        const n = Math.floor(prices.length / b.qty) * b.qty;
+        t = (n / b.qty) * b.price + sum(prices.slice(n));
       }
-      subtotal += full;
       total += t;
-      productTotals.set(id, { qty, full, t });
+      if (t < full) dealTotals.push({ label, qty: prices.length, t });
     }
-    // lines show full price; bundle pricing is shown once as its own row
-    for (const l of sheet.lines) {
-      const p = product(l.id);
-      if (p) perLine.set(lineKey(l.id, l.variant), l.qty * p.price);
-    }
-    return { subtotal, total, savings: subtotal - total, perLine, productTotals };
+    subtotal = cents(subtotal); total = cents(total);
+    return { subtotal, total, savings: cents(subtotal - total), perLine, dealTotals };
   }
 
   /* Drop lines whose product disappeared and clamp to current stock. */
@@ -143,7 +162,7 @@
     label.append(
       el("a", { href: `#p-${p.id}` },
         el("span", { class: "label__name", text: p.name }),
-        el("span", { class: "label__meta", text: `${formatMoney(p.price)}${p.bundle ? ` · ${p.bundle.qty} for ${formatMoney(p.bundle.price)}` : ""} · ${left ? `${left} left` : "All gone for now"}` }),
+        el("span", { class: "label__meta", text: `${formatMoney(p.price)}${p.bundle ? ` · ${dealText(p)}` : ""} · ${stockWord(left)}` }),
         p.photo ? null : el("span", { class: "label__meta", text: "Photo coming soon" })
       )
     );
@@ -181,7 +200,7 @@
 
     const price = $("[data-price]", node);
     price.append(formatMoney(p.price));
-    if (p.bundle) price.append(el("span", { class: "bundle", text: ` · ${p.bundle.qty} for ${formatMoney(p.bundle.price)}` }));
+    if (p.bundle) price.append(el("span", { class: "bundle", text: ` · ${dealText(p)}` }));
     $("[data-desc]", node).textContent = p.description || "";
     if (!p.description) $("[data-desc]", node).remove();
 
@@ -237,9 +256,8 @@
 
     const stockEl = $("[data-stock]", node);
     const what = variant ? `${variant}: ` : "";
-    stockEl.classList.toggle("is-low", stock > 0 && stock <= 3);
-    if (stock === 0) stockEl.textContent = `${what}All gone for now`;
-    else stockEl.textContent = `${what}${stock} left${onSheet ? ` · ${onSheet} on your sheet` : ""}`;
+    stockEl.classList.toggle("is-low", isLow(stock));
+    stockEl.textContent = `${what}${stockWord(stock)}${stock && onSheet ? ` · ${onSheet} on your sheet` : ""}`;
 
     const add = $("[data-add]", node);
     const notify = $("[data-notify]", node);
@@ -303,7 +321,7 @@
       minus.addEventListener("click", () => setQty(l, l.qty - 1));
       plus.addEventListener("click", () => setQty(l, l.qty + 1));
       remove.addEventListener("click", () => { setQty(l, 0); announce(`Removed ${label}.`); });
-      const meta = `${formatMoney(p.price)} each${p.bundle ? ` · ${p.bundle.qty} for ${formatMoney(p.bundle.price)}` : ""}${l.qty >= max ? " · that's all of them" : ""}`;
+      const meta = `${formatMoney(p.price)} each${p.bundle ? ` · ${dealText(p)}` : ""}${l.qty >= max ? " · that's all of them" : ""}`;
       list.append(el("li", {},
         el("div", { class: "line__info" },
           el("span", { class: "line__name", text: label }),
@@ -404,13 +422,13 @@
     if (!sheet.lines.length) return;
     if ($("input[name=botcheck]", orderForm).checked) return;
 
-    const { subtotal, total, savings, productTotals } = priceTotals();
+    const { subtotal, total, savings, dealTotals } = priceTotals();
     const cur = shop.settings.currency || "CAD";
     const rows = sheet.lines.map((l) => {
       const p = product(l.id);
       return `${l.qty} × ${p.name}${l.variant ? ` (${l.variant})` : ""} @ ${formatMoney(p.price)}`;
     });
-    const bundleRows = [...productTotals].filter(([id, t]) => t.t < t.full).map(([id, t]) => `${product(id).name}: ${t.qty} for ${formatMoney(t.t)} with bundle pricing`);
+    const bundleRows = dealTotals.map((d) => `${d.label.charAt(0).toUpperCase()}${d.label.slice(1)}: ${d.qty} for ${formatMoney(d.t)} with bundle pricing`);
     const contact = contactIn.value.trim();
     const text = [
       `Order sheet No. ${sheet.no}`, "",

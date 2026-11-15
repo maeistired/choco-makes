@@ -4,50 +4,50 @@ The Choco Makes shop: one static page hosted on GitHub Pages. Customers browse w
 
 ## Updating the shop
 
-Everything you change lives in **`data/shop.json`**. Edit it (in VS Code or on github.com), commit, and the site updates within a minute or two.
+Your stock lives in two spreadsheets in **`inventory/`**. Open them in Numbers, Excel or Google Sheets, edit, and save (or export) as CSV.
 
-### A product
+### 1. `inventory/products.csv`: one row per variant
 
-```json
-{
-  "id": "lilac-dot-notebook",
-  "name": "Lilac dot-grid notebook",
-  "category": "Notebooks",
-  "price": 18,
-  "bundle": { "qty": 2, "price": 32 },
-  "description": "A5, 80 pages, hand-stitched.",
-  "photo": "assets/img/products/lilac-dot-notebook.jpg",
-  "photoAlt": "Lilac cloth notebook lying open",
-  "cloth": "lilac",
-  "variantLabel": "Cover",
-  "variants": [
-    { "name": "Lilac", "stock": 4 },
-    { "name": "Blue", "stock": 0 }
-  ]
-}
+| id | name | category | price | bundle_qty | bundle_price | deal_group | cloth | featured | variant_label | variant | stock | description |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| handmade-notebook | Handmade notebook | Notebooks | 10.50 | 2 | 18 | | lilac | yes | Pages | Cream | 4 | |
+| handmade-notebook | Handmade notebook | | | | | | | | | White | 6 | |
+| clicker-creeper | Clicker creeper | Fidgets | 7.50 | 2 | 13 | fidgets | blue | | | | 3 | |
+| single-key-clicker | Single key clicker | Fidgets | 7.50 | 2 | 13 | fidgets | stone | | | | 10 | |
+
+- **A product with variants** (like cream or white pages) takes one row per variant, all with the same `id` and `name`. Fill in price, category and so on once, on the first row only. Each row has its own `stock`.
+- **A product with no variants** is one row with `variant` left empty.
+- **id**: lowercase with dashes. Leave it blank and it's made from the name. Don't change it once people have ordered, because saved order sheets use it.
+- **price / bundle_price**: in CAD, `7.50` or `$7.50`. `bundle_qty` + `bundle_price` = "buy 2 for $13", counted across a product's variants.
+- **deal_group** (optional): products with the same deal group share one deal, so customers can mix and match. For example, with `fidgets` on both clickers, one creeper plus one key clicker is $13. Every product in a group needs the same bundle numbers. The site shows "any 2 fidgets for $13".
+- **stock**: a whole number. Customers never see the exact count, only a label: **In stock** (6 or more), **Low stock** (3 to 5), **1–2 left**, or **All gone for now** (0). To change where "Low stock" starts, edit `settings.lowStockAt` in `data/shop.json` (it's set to 5). `0` means sold out: the item stays visible, marked "All gone for now", with a button customers can use to be told when it's back.
+- **cloth**: the colour behind the item: `lilac`, `pink`, `blue` or `stone`.
+- **featured**: `yes` puts the item in the big panel at the top (one item only).
+- **Row order** is the order on the page.
+
+### 2. `inventory/updates.csv`: short dated notes
+
+| date | text |
+|---|---|
+| 2026-12-01 | New batch of clickers is in. |
+
+The newest is shown first. Dates use the form `YYYY-MM-DD`.
+
+### 3. Photos
+
+Put the original photo in **`photos/`**, named after the product id: `photos/handmade-notebook.jpg` (`.png`, `.heic` and `.webp` work too). It's resized and copied into `assets/img/products/` for the site automatically. Your originals stay on your computer and aren't uploaded.
+
+### 4. Rebuild, check, publish
+
+```sh
+python3 tools/build_shop.py
 ```
 
-- **id**: a unique, lowercase name with dashes. Don't change it once people have ordered, because saved order sheets use it.
-- **price**: a plain number, in CAD.
-- **bundle** (optional): "buy 2 for $32". It applies across all variants of the same product, so one Lilac and one Blue count as a pair.
-- **cloth**: the background colour behind the item. Use `lilac`, `pink`, `blue` or `stone`.
-- **variants** (optional): each variant has its own stock. With no variants, use `"stock": 7` on the product instead.
-- **Sold out**: set stock to `0`. The item stays visible, marked "All gone for now", with a "Tell me when it's back" button.
-- **featured: true** puts the item in the big panel at the top.
-- **sample: true** shows the "Sample" tag. Delete the sample products once your real ones are in.
-- **photo**: put image files in `assets/img/products/`. Square photos look best.
+It checks for mistakes first (a missing price, a stock count that isn't a number, a typo in a cloth colour) and names the row to fix. If anything's wrong, nothing is changed. When it's all good, it rebuilds `data/shop.json`. Preview it (below), then commit and push. The live site updates within a minute or two.
 
-### An update
+Use `python3 tools/build_shop.py --check` to check without changing anything.
 
-```json
-{ "date": "2026-12-01", "text": "New batch of clickers is in. 15 of each colour." }
-```
-
-Updates are listed newest first.
-
-### Categories
-
-`"categories"` sets the order categories appear in. A product with a new category still appears; it's just placed after the listed ones.
+Settings (currency, the order key, the confirmation message) stay in `data/shop.json` under `settings`. The rebuild never touches them.
 
 ## Turning on orders (Web3Forms)
 
