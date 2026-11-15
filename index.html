@@ -1,0 +1,179 @@
+<!doctype html>
+<html lang="en-CA">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Choco Makes · Handmade notebooks and 3D-printed clickers</title>
+  <meta name="description" content="Handmade notebooks and 3D-printed clicker fidgets, made in small batches. Browse what's in stock and send an order sheet straight to the maker.">
+  <meta name="theme-color" content="#F5F4F7">
+  <link rel="preload" href="assets/fonts/castoro-regular.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="preload" href="assets/fonts/hanken-grotesk.woff2" as="font" type="font/woff2" crossorigin>
+  <link rel="stylesheet" href="assets/css/site.css">
+  <script src="assets/js/shop.js" defer></script>
+</head>
+<body>
+  <a class="skip" href="#shop">Skip to the shop</a>
+
+  <header class="masthead">
+    <div class="wrap masthead__inner">
+      <a class="wordmark" href="#top" aria-label="Choco Makes, back to top">Choco Makes</a>
+      <nav aria-label="Main">
+        <ul class="nav">
+          <li><a href="#shop">Shop</a></li>
+          <li><a href="#updates">Updates</a></li>
+          <li><a href="#about">About</a></li>
+        </ul>
+      </nav>
+    </div>
+  </header>
+
+  <main id="top">
+    <section class="intro wrap" aria-labelledby="intro-title">
+      <div class="intro__copy">
+        <h1 id="intro-title">Handmade notebooks and 3D-printed clickers, made in small batches.</h1>
+        <p class="intro__lede">Each piece is made by one person, about 10 to 20 at a time. Pick what you like, then send your order sheet straight to the maker.</p>
+        <a class="button" href="#shop">Browse the shop</a>
+      </div>
+      <figure class="feature cloth cloth--lilac" id="feature" aria-label="Featured item">
+        <div class="feature__media" data-feature-media></div>
+        <figcaption class="feature__label label" data-feature-label>
+          <span class="label__name">Loading the shop…</span>
+        </figcaption>
+      </figure>
+    </section>
+
+    <section class="shop wrap" id="shop" aria-labelledby="shop-title">
+      <div class="section-head">
+        <h2 id="shop-title">Shop</h2>
+        <p class="section-head__note">Stock counts are kept current by the maker. When something's gone, leave your details and you'll hear when it's back.</p>
+      </div>
+      <div data-catalogue>
+        <p class="status-note">Loading the shop…</p>
+      </div>
+    </section>
+
+    <section class="updates wrap" id="updates" aria-labelledby="updates-title">
+      <div class="section-head">
+        <h2 id="updates-title">Updates</h2>
+      </div>
+      <ol class="updates__list" data-updates></ol>
+    </section>
+
+    <section class="about" id="about" aria-labelledby="about-title">
+      <div class="wrap about__inner">
+        <div class="about__side">
+          <h2 id="about-title">About Choco Makes</h2>
+          <div class="about__swatch cloth cloth--pink">
+            <dl class="facts label">
+              <div><dt>Batch size</dt><dd>About 10–20 of each item</dd></div>
+              <div><dt>Prices</dt><dd>Canadian dollars</dd></div>
+              <div><dt>Ordering</dt><dd>Send an order sheet to the maker</dd></div>
+            </dl>
+          </div>
+        </div>
+        <div class="about__body">
+          <p class="about__lead">Choco Makes is one maker making handmade notebooks and 3D-printed clicker fidgets in small batches.</p>
+          <p>There's no checkout here. Add what you'd like to your order sheet and send it. The maker reads every sheet personally and gets back to you to sort out the rest.</p>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer">
+    <div class="wrap footer__inner">
+      <span class="wordmark wordmark--small">Choco Makes</span>
+      <span>Small-batch notebooks and clickers. Prices in CAD.</span>
+      <span>© <span data-year>2026</span> Choco Makes</span>
+    </div>
+  </footer>
+
+  <!-- Order sheet: a docked slip that unfolds upward -->
+  <aside class="slip" data-slip aria-label="Order sheet">
+    <span class="slip__copy slip__copy--pink" aria-hidden="true"></span>
+    <span class="slip__copy slip__copy--blue" aria-hidden="true"></span>
+
+    <div class="sheet" id="order-sheet" data-sheet hidden>
+      <div class="wrap sheet__inner">
+        <div class="sheet__head">
+          <h2 class="sheet__title" tabindex="-1" data-sheet-title>Order sheet <span class="sheet__no" data-sheet-no></span></h2>
+        </div>
+
+        <div class="sheet__grid">
+          <div class="sheet__lines">
+            <ul class="lines" data-lines></ul>
+            <p class="lines__empty" data-empty>Nothing on your sheet yet. Add something from the shop and it will appear here.</p>
+            <dl class="totals" data-totals>
+              <div><dt>Items</dt><dd data-subtotal></dd></div>
+              <div class="totals__save" data-savings-row hidden><dt>Bundle pricing</dt><dd data-savings></dd></div>
+              <div class="totals__grand"><dt>Total</dt><dd data-total></dd></div>
+            </dl>
+          </div>
+
+          <form class="sheet__form" data-order-form novalidate>
+            <p class="sheet__intro">Send this sheet to the maker. Nothing is charged online.</p>
+            <div class="field">
+              <label for="order-name">Your name</label>
+              <input id="order-name" name="name" autocomplete="name" required>
+              <p class="field__error" id="order-name-error" hidden></p>
+            </div>
+            <div class="field">
+              <label for="order-contact">Phone or email</label>
+              <input id="order-contact" name="contact" autocomplete="email" inputmode="email" required aria-describedby="order-contact-hint">
+              <p class="field__hint" id="order-contact-hint">So the maker can reply to you.</p>
+              <p class="field__error" id="order-contact-error" hidden></p>
+            </div>
+            <input class="honeypot" type="checkbox" name="botcheck" tabindex="-1" autocomplete="off" aria-hidden="true">
+            <button class="button button--wide" type="submit" data-send>Send order sheet</button>
+            <p class="form-status" data-form-status role="status" aria-live="polite"></p>
+          </form>
+        </div>
+      </div>
+    </div>
+
+    <div class="slip__bar">
+      <div class="wrap slip__inner">
+        <p class="slip__title">Order sheet <span class="slip__no" data-slip-no></span></p>
+        <p class="slip__summary" data-slip-summary aria-live="polite">Empty</p>
+        <button class="button button--slip" type="button" data-toggle aria-expanded="false" aria-controls="order-sheet">
+          <span data-toggle-label>Review &amp; send</span>
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M6 15l6-6 6 6"/></svg>
+        </button>
+      </div>
+    </div>
+  </aside>
+
+  <p class="sr-only" role="status" aria-live="polite" data-announce></p>
+
+  <template id="tpl-product">
+    <article class="product">
+      <div class="product__cloth cloth">
+        <div class="product__tags"><span class="product__tag" data-category></span><span class="product__tag" data-tag hidden>Sample</span></div>
+        <span class="product__gone label" data-gone hidden>All gone for now</span>
+        <div class="product__media" data-media></div>
+      </div>
+      <div class="product__body">
+        <h4 class="product__name" data-name></h4>
+        <p class="product__price" data-price></p>
+        <p class="product__desc" data-desc></p>
+        <fieldset class="variants" data-variants hidden>
+          <legend class="variants__legend" data-variant-legend></legend>
+          <div class="variants__options" data-variant-options></div>
+        </fieldset>
+        <p class="product__stock" data-stock></p>
+        <div class="product__actions">
+          <button class="button button--small" type="button" data-add>Add to sheet</button>
+          <button class="button button--small button--quiet" type="button" data-notify hidden aria-expanded="false"><span>Notify me<span class="long"> when it's back</span></span></button>
+        </div>
+        <form class="interest" data-interest hidden novalidate>
+          <label class="interest__label">Phone or email
+            <input name="contact" autocomplete="email" inputmode="email" required>
+          </label>
+          <input class="honeypot" type="checkbox" name="botcheck" tabindex="-1" autocomplete="off" aria-hidden="true">
+          <button class="button button--small" type="submit">Send</button>
+          <p class="interest__status" role="status" aria-live="polite"></p>
+        </form>
+      </div>
+    </article>
+  </template>
+</body>
+</html>

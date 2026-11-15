@@ -1,0 +1,490 @@
+{
+  "schemaVersion": 2,
+  "generatedAt": "2026-11-15T20:52:32+00:00",
+  "title": "Design System: Choco Makes",
+  "extensions": {
+    "colorMeta": {
+      "paper": {
+        "role": "neutral",
+        "displayName": "Cool Paper",
+        "canonical": "#F5F4F7",
+        "oklch": "oklch(96.9% 0.004 301)",
+        "tonalRamp": [
+          "#121113",
+          "#29282B",
+          "#48474A",
+          "#69686B",
+          "#8C8B8E",
+          "#B1B0B3",
+          "#D1D0D3",
+          "#EEEEEF"
+        ]
+      },
+      "sheet": {
+        "role": "neutral",
+        "displayName": "Sheet White",
+        "canonical": "#FFFFFF",
+        "oklch": "oklch(100.0% 0.000 90)",
+        "tonalRamp": [
+          "#121212",
+          "#292929",
+          "#484848",
+          "#696969",
+          "#8C8C8C",
+          "#B1B1B1",
+          "#D1D1D1",
+          "#EEEEEE"
+        ]
+      },
+      "ink": {
+        "role": "neutral",
+        "displayName": "Charcoal Ink",
+        "canonical": "#25232C",
+        "oklch": "oklch(26.2% 0.017 295)",
+        "tonalRamp": [
+          "#121018",
+          "#292730",
+          "#484650",
+          "#696772",
+          "#8D8A96",
+          "#B2AFBB",
+          "#D1CFDA",
+          "#EFEEF2"
+        ]
+      },
+      "ink-soft": {
+        "role": "neutral",
+        "displayName": "Graphite",
+        "canonical": "#55515F",
+        "oklch": "oklch(44.4% 0.023 299)",
+        "tonalRamp": [
+          "#121018",
+          "#2A2731",
+          "#494552",
+          "#6A6674",
+          "#8D8A96",
+          "#B2AFBA",
+          "#D2CFD9",
+          "#EFEEF1"
+        ]
+      },
+      "rule": {
+        "role": "neutral",
+        "displayName": "Hairline",
+        "canonical": "#DEDBE4",
+        "oklch": "oklch(89.6% 0.013 301)",
+        "tonalRamp": [
+          "#121016",
+          "#2A282E",
+          "#49464E",
+          "#6A676F",
+          "#8D8A93",
+          "#B2AFB8",
+          "#D2CFD8",
+          "#EFEEF1"
+        ]
+      },
+      "rule-strong": {
+        "role": "neutral",
+        "displayName": "Heavy Rule",
+        "canonical": "#25232C",
+        "oklch": "oklch(26.2% 0.017 295)",
+        "tonalRamp": [
+          "#121018",
+          "#292730",
+          "#484650",
+          "#696772",
+          "#8D8A96",
+          "#B2AFBB",
+          "#D1CFDA",
+          "#EFEEF2"
+        ]
+      },
+      "cloth-lilac": {
+        "role": "primary",
+        "displayName": "Lilac Book Cloth",
+        "canonical": "#B9A6E0",
+        "oklch": "oklch(76.2% 0.084 299)",
+        "tonalRamp": [
+          "#140D21",
+          "#2C233D",
+          "#4C4162",
+          "#6E608A",
+          "#9282B4",
+          "#B8A5DF",
+          "#D7C7FA",
+          "#F0EBFC"
+        ]
+      },
+      "cloth-pink": {
+        "role": "secondary",
+        "displayName": "Rose Book Cloth",
+        "canonical": "#E6B6C6",
+        "oklch": "oklch(82.4% 0.059 357)",
+        "tonalRamp": [
+          "#1A0D12",
+          "#352329",
+          "#584048",
+          "#7E5F69",
+          "#A6808D",
+          "#CFA3B2",
+          "#EFC3D2",
+          "#F9EAEF"
+        ]
+      },
+      "cloth-blue": {
+        "role": "tertiary",
+        "displayName": "Pale Sky Book Cloth",
+        "canonical": "#B3D0E5",
+        "oklch": "oklch(84.3% 0.043 240)",
+        "tonalRamp": [
+          "#0A1318",
+          "#1F2A32",
+          "#3B4A54",
+          "#596C79",
+          "#7990A0",
+          "#9BB5C8",
+          "#BAD5E9",
+          "#E7F0F6"
+        ]
+      },
+      "cloth-stone": {
+        "role": "neutral",
+        "displayName": "Stone Book Cloth",
+        "canonical": "#D7D3DD",
+        "oklch": "oklch(87.3% 0.014 304)",
+        "tonalRamp": [
+          "#131017",
+          "#2A272F",
+          "#49464E",
+          "#6B6770",
+          "#8E8A93",
+          "#B3AFB9",
+          "#D3CFD8",
+          "#EFEEF1"
+        ]
+      },
+      "copy-pink": {
+        "role": "tertiary",
+        "displayName": "Duplicate Pink",
+        "canonical": "#F1C9D6",
+        "oklch": "oklch(87.4% 0.048 357)",
+        "tonalRamp": [
+          "#180E12",
+          "#322429",
+          "#544248",
+          "#796169",
+          "#A0838D",
+          "#C9A6B2",
+          "#EAC6D1",
+          "#F7EBEF"
+        ]
+      },
+      "copy-blue": {
+        "role": "tertiary",
+        "displayName": "Duplicate Blue",
+        "canonical": "#C6DFEE",
+        "oklch": "oklch(89.0% 0.034 234)",
+        "tonalRamp": [
+          "#0C1316",
+          "#222A2F",
+          "#3E4A50",
+          "#5D6B74",
+          "#7D8F9A",
+          "#9FB5C1",
+          "#BED5E2",
+          "#E8F0F5"
+        ]
+      },
+      "error": {
+        "role": "error",
+        "displayName": "Oxblood",
+        "canonical": "#A3253F",
+        "oklch": "oklch(47.6% 0.161 15)",
+        "tonalRamp": [
+          "#350002",
+          "#590013",
+          "#850E2D",
+          "#B0384C",
+          "#D26572",
+          "#F39099",
+          "#FFB7BD",
+          "#FFE7E8"
+        ]
+      },
+      "ok": {
+        "role": "success",
+        "displayName": "Bottle Green",
+        "canonical": "#2F5D46",
+        "oklch": "oklch(43.8% 0.064 160)",
+        "tonalRamp": [
+          "#00180A",
+          "#09311F",
+          "#26523C",
+          "#49745D",
+          "#709681",
+          "#99BAA7",
+          "#BDD9C9",
+          "#E8F1EC"
+        ]
+      }
+    },
+    "typographyMeta": {
+      "display": {
+        "displayName": "Display",
+        "purpose": "The single intro headline."
+      },
+      "headline": {
+        "displayName": "Headline",
+        "purpose": "Section heads and the unfolded sheet title."
+      },
+      "title": {
+        "displayName": "Title",
+        "purpose": "Product names, paper-label names, the slip title."
+      },
+      "lead": {
+        "displayName": "Lead",
+        "purpose": "About lead sentence, grand total; update notes at 1.25rem."
+      },
+      "body": {
+        "displayName": "Body",
+        "purpose": "Running text, ledes, descriptions."
+      },
+      "label": {
+        "displayName": "Label",
+        "purpose": "Prices, dates, field labels, fact terms, stock counts, order numbers; tabular figures."
+      }
+    },
+    "shadows": [
+      {
+        "name": "tipped-label",
+        "value": "0 1px 2px rgba(37, 35, 44, 0.12), 0 6px 14px -8px rgba(37, 35, 44, 0.3)",
+        "purpose": "White paper labels on cloth."
+      },
+      {
+        "name": "object-on-cloth",
+        "value": "0 2px 3px rgba(37, 35, 44, 0.12), 0 24px 34px -20px rgba(37, 35, 44, 0.45)",
+        "purpose": "Placeholder object standing on a product or feature cloth."
+      },
+      {
+        "name": "sheet-over-page",
+        "value": "0 -18px 40px -24px rgba(37, 35, 44, 0.35)",
+        "purpose": "Unfolded order sheet casting upward onto the page."
+      }
+    ],
+    "motion": [
+      {
+        "name": "ease-out",
+        "value": "cubic-bezier(0.16, 1, 0.3, 1)",
+        "purpose": "The single easing for every transition and animation."
+      },
+      {
+        "name": "state-transition",
+        "value": "140-160ms",
+        "purpose": "Button colour and chip border changes."
+      },
+      {
+        "name": "arrival-rise",
+        "value": "rise 14px, 600-700ms, staggered 0/80/140/420ms",
+        "purpose": "Intro headline, lede, button and feature label on load."
+      },
+      {
+        "name": "arrival-settle",
+        "value": "clip-path wipe, 900ms, 60ms delay",
+        "purpose": "Feature cloth panel on load."
+      },
+      {
+        "name": "slip-dock",
+        "value": "translateY(100%) to 0, 700ms, 500ms delay",
+        "purpose": "Slip bar arrives from the bottom edge on load."
+      },
+      {
+        "name": "sheet-unfold",
+        "value": "clip-path inset(100% 0 0 0) + 24px lift, 380ms in / 220ms reversed out",
+        "purpose": "Order sheet opening and closing."
+      },
+      {
+        "name": "copies-fan",
+        "value": "420ms, 40ms and 80ms stagger",
+        "purpose": "Duplicate copies fanning when the sheet opens."
+      },
+      {
+        "name": "slip-tick",
+        "value": "rise 6px + fade, 520ms",
+        "purpose": "Slip summary when an item is added."
+      },
+      {
+        "name": "reduced-motion",
+        "value": "none",
+        "purpose": "All animation and transition removed under prefers-reduced-motion: reduce."
+      }
+    ],
+    "breakpoints": [
+      {
+        "name": "phone-narrow",
+        "value": "380px"
+      },
+      {
+        "name": "phone",
+        "value": "640px"
+      },
+      {
+        "name": "tablet",
+        "value": "960px"
+      },
+      {
+        "name": "wide-short",
+        "value": "min-width 961px and max-height 940px"
+      }
+    ],
+    "layout": {
+      "maxWidth": "1296px",
+      "gutter": "clamp(20px, 5vw, 72px)",
+      "slipHeight": "68px (72px under 640px)",
+      "splitRatio": "5:7",
+      "gridMinColumn": "260px"
+    },
+    "texture": {
+      "name": "linen",
+      "asset": "assets/img/linen.png",
+      "size": "240px 240px",
+      "generator": "tools/linen-generator.py",
+      "appliesTo": "every book-cloth surface"
+    }
+  },
+  "components": [
+    {
+      "name": "Primary Button",
+      "kind": "button",
+      "refersTo": "button-primary",
+      "description": "Charcoal solid square button for the main action on any surface.",
+      "html": "<button class=\"ds-btn\">Browse the shop</button>",
+      "css": ".ds-btn{display:inline-flex;align-items:center;justify-content:center;gap:8px;min-height:48px;padding:0 24px;background:var(--ink,#25232C);color:var(--paper,#F5F4F7);border:1px solid var(--ink,#25232C);border-radius:0;font:600 1rem/1.2 'Hanken Grotesk',system-ui,sans-serif;letter-spacing:0.005em;cursor:pointer;transition:background-color 160ms cubic-bezier(0.16,1,0.3,1)}.ds-btn:hover{background:#3A3744}.ds-btn:active{background:#000}.ds-btn:focus-visible{outline:2px solid var(--ink,#25232C);outline-offset:3px}"
+    },
+    {
+      "name": "Quiet Button",
+      "kind": "button",
+      "refersTo": "button-quiet",
+      "description": "Outlined ink button for the one secondary action on a card (Notify me).",
+      "html": "<button class=\"ds-btn-quiet\">Notify me when it's back</button>",
+      "css": ".ds-btn-quiet{display:inline-flex;align-items:center;min-height:40px;padding:0 16px;background:transparent;color:var(--ink,#25232C);border:1px solid var(--ink,#25232C);border-radius:0;font:600 0.9375rem/1.2 'Hanken Grotesk',system-ui,sans-serif;cursor:pointer;transition:background-color 160ms cubic-bezier(0.16,1,0.3,1)}.ds-btn-quiet:hover{background:var(--sheet,#FFFFFF)}.ds-btn-quiet:focus-visible{outline:2px solid var(--ink,#25232C);outline-offset:3px}"
+    },
+    {
+      "name": "Variant Chips",
+      "kind": "chip",
+      "refersTo": "variant-chip",
+      "description": "Square radio chips for cover or colour variants; selected is a doubled ink edge, sold-out is struck through.",
+      "html": "<div class=\"ds-chips\"><label class=\"ds-chip\"><input type=\"radio\" name=\"v\" checked><span>Lilac</span></label><label class=\"ds-chip is-out\"><input type=\"radio\" name=\"v\"><span>Pink (gone)</span></label><label class=\"ds-chip\"><input type=\"radio\" name=\"v\"><span>Blue</span></label></div>",
+      "css": ".ds-chips{display:flex;flex-wrap:wrap;gap:8px;font-family:'Hanken Grotesk',system-ui,sans-serif}.ds-chip{position:relative}.ds-chip input{position:absolute;inset:0;opacity:0;margin:0;cursor:pointer}.ds-chip span{display:inline-flex;align-items:center;min-height:36px;padding:0 12px;border:1px solid var(--rule,#DEDBE4);background:var(--sheet,#FFFFFF);color:var(--ink,#25232C);font-size:0.875rem;transition:border-color 140ms cubic-bezier(0.16,1,0.3,1)}.ds-chip:hover span{border-color:var(--ink-soft,#55515F)}.ds-chip input:checked+span{border-color:var(--ink,#25232C);box-shadow:inset 0 0 0 1px var(--ink,#25232C)}.ds-chip input:focus-visible+span{outline:2px solid var(--ink,#25232C);outline-offset:2px}.ds-chip.is-out span{color:var(--ink-soft,#55515F);text-decoration:line-through;text-decoration-thickness:1px}"
+    },
+    {
+      "name": "Text Field",
+      "kind": "input",
+      "refersTo": "text-input",
+      "description": "Square white field with a Graphite border, label above and hint below.",
+      "html": "<div class=\"ds-field\"><label for=\"ds-c\">Phone or email</label><input id=\"ds-c\" type=\"text\"><p>So the maker can reply to you.</p></div>",
+      "css": ".ds-field{display:grid;gap:4px;font-family:'Hanken Grotesk',system-ui,sans-serif;color:var(--ink,#25232C);max-width:320px}.ds-field label{font-size:0.875rem;font-weight:600}.ds-field input{min-height:44px;padding:0 12px;border:1px solid var(--ink-soft,#55515F);border-radius:0;background:var(--sheet,#FFFFFF);font:400 1rem 'Hanken Grotesk',system-ui,sans-serif;color:inherit}.ds-field input:focus-visible{outline:2px solid var(--ink,#25232C);outline-offset:0;border-color:var(--ink,#25232C)}.ds-field p{margin:0;font-size:0.8125rem;color:var(--ink-soft,#55515F)}"
+    },
+    {
+      "name": "Masthead",
+      "kind": "nav",
+      "refersTo": "",
+      "description": "Serif wordmark left, three grotesk links right, hairline below.",
+      "html": "<header class=\"ds-mast\"><a class=\"ds-word\" href=\"#\">Choco Makes</a><nav><a href=\"#\">Shop</a><a href=\"#\">Updates</a><a href=\"#\">About</a></nav></header>",
+      "css": ".ds-mast{display:flex;align-items:center;justify-content:space-between;min-height:76px;padding:0 24px;border-bottom:1px solid var(--rule,#DEDBE4);background:var(--paper,#F5F4F7);color:var(--ink,#25232C)}.ds-word{font:400 1.875rem/1 Castoro,'Iowan Old Style',Georgia,serif;letter-spacing:-0.01em;text-decoration:none;color:inherit}.ds-mast nav{display:flex;gap:32px}.ds-mast nav a{font:500 1rem 'Hanken Grotesk',system-ui,sans-serif;text-decoration:none;color:inherit;padding:8px 0;text-underline-offset:0.2em}.ds-mast nav a:hover{text-decoration:underline}.ds-mast a:focus-visible{outline:2px solid var(--ink,#25232C);outline-offset:3px}"
+    },
+    {
+      "name": "Product Card",
+      "kind": "card",
+      "refersTo": "",
+      "description": "Linen book-cloth tile with paper tags and a standing object, then an unboxed serif/grotesk body and a charcoal action.",
+      "html": "<article class=\"ds-card\"><div class=\"ds-cloth\"><span class=\"ds-tag\">Notebooks</span><div class=\"ds-obj\">Photo coming soon</div></div><h4>Sample notebook, A5</h4><p class=\"ds-price\">$18 <span>· 2 for $32</span></p><p class=\"ds-stock\">Lilac: 4 left</p><button>Add to sheet</button></article>",
+      "css": ".ds-card{width:280px;font-family:'Hanken Grotesk',system-ui,sans-serif;color:var(--ink,#25232C)}.ds-cloth{position:relative;aspect-ratio:3/2;display:grid;place-items:center;background-color:var(--cloth-lilac,#B9A6E0);background-image:repeating-linear-gradient(0deg,rgba(37,35,44,0.05) 0 1px,transparent 1px 3px),repeating-linear-gradient(90deg,rgba(255,255,255,0.08) 0 1px,transparent 1px 3px)}.ds-tag{position:absolute;top:12px;left:12px;background:#fff;padding:2px 8px;font-size:0.75rem;font-weight:600;letter-spacing:0.02em}.ds-obj{height:66%;aspect-ratio:3/4;background:#fff;display:grid;place-items:center;text-align:center;font-size:0.8125rem;color:var(--ink-soft,#55515F);padding:12px;box-shadow:0 2px 3px rgba(37,35,44,0.12),0 24px 34px -20px rgba(37,35,44,0.45)}.ds-card h4{margin:16px 0 0;font:400 1.375rem/1.2 Castoro,Georgia,serif}.ds-price{margin:8px 0 0;font-weight:600;font-variant-numeric:tabular-nums}.ds-price span{font-weight:400;color:var(--ink-soft,#55515F)}.ds-stock{margin:12px 0 0;font-size:0.875rem;font-variant-numeric:tabular-nums}.ds-card button{margin-top:16px;min-height:40px;padding:0 16px;background:var(--ink,#25232C);color:var(--paper,#F5F4F7);border:1px solid var(--ink,#25232C);border-radius:0;font:600 0.9375rem 'Hanken Grotesk',system-ui,sans-serif;cursor:pointer}.ds-card button:hover{background:#3A3744}.ds-card button:focus-visible{outline:2px solid var(--ink,#25232C);outline-offset:3px}"
+    },
+    {
+      "name": "Tipped Paper Label",
+      "kind": "custom",
+      "refersTo": "paper-label",
+      "description": "White label tipped onto book cloth, carrying a serif name and tabular meta.",
+      "html": "<div class=\"ds-labelwrap\"><div class=\"ds-label\"><span class=\"n\">Sample notebook, A5</span><span class=\"m\">$18 · 2 for $32 · 11 left</span></div></div>",
+      "css": ".ds-labelwrap{padding:32px;background-color:var(--cloth-pink,#E6B6C6);background-image:repeating-linear-gradient(0deg,rgba(37,35,44,0.05) 0 1px,transparent 1px 3px)}.ds-label{display:inline-block;background:#fff;padding:12px 16px;box-shadow:0 1px 2px rgba(37,35,44,0.12),0 6px 14px -8px rgba(37,35,44,0.3);color:var(--ink,#25232C)}.ds-label .n{display:block;font:400 1.375rem/1.2 Castoro,Georgia,serif}.ds-label .m{display:block;margin-top:4px;font:400 0.875rem 'Hanken Grotesk',system-ui,sans-serif;color:var(--ink-soft,#55515F);font-variant-numeric:tabular-nums}"
+    },
+    {
+      "name": "Docked Order Slip",
+      "kind": "custom",
+      "refersTo": "order-slip-bar",
+      "description": "Bottom-docked numbered slip with pink and blue duplicate copies peeking above; the toggle unfolds the full sheet.",
+      "html": "<div class=\"ds-slip\"><span class=\"ds-copy b\"></span><span class=\"ds-copy p\"></span><div class=\"ds-bar\"><p class=\"t\">Order sheet <span>No. 1115-94Q</span></p><p class=\"s\">2 items · <strong>$26.00</strong> CAD</p><button>Review &amp; send <svg viewBox=\"0 0 24 24\" width=\"18\" height=\"18\" fill=\"none\" stroke=\"currentColor\" stroke-width=\"1.75\" stroke-linecap=\"round\" stroke-linejoin=\"round\"><path d=\"M6 15l6-6 6 6\"/></svg></button></div></div>",
+      "css": ".ds-slip{position:relative;isolation:isolate;margin-top:16px;font-family:'Hanken Grotesk',system-ui,sans-serif;color:var(--ink,#25232C)}.ds-copy{position:absolute;left:0;right:0;bottom:0;height:100%;transition:transform 420ms cubic-bezier(0.16,1,0.3,1)}.ds-copy.p{background:var(--copy-pink,#F1C9D6);transform:translateY(-5px);z-index:-1}.ds-copy.b{background:var(--copy-blue,#C6DFEE);transform:translateY(-10px);z-index:-2}.ds-slip:hover .ds-copy.p{transform:translateY(-7px) translateX(6px)}.ds-slip:hover .ds-copy.b{transform:translateY(-14px) translateX(12px)}.ds-bar{position:relative;display:grid;grid-template-columns:auto 1fr auto;align-items:center;gap:24px;min-height:68px;padding:0 24px;background:#fff;border-top:1px solid var(--ink,#25232C)}.ds-bar p{margin:0}.ds-bar .t{font:400 1.375rem/1 Castoro,Georgia,serif;white-space:nowrap}.ds-bar .t span{font:600 0.875rem 'Hanken Grotesk',system-ui,sans-serif;color:var(--ink-soft,#55515F);margin-left:8px;letter-spacing:0.02em;font-variant-numeric:tabular-nums}.ds-bar .s{text-align:right;color:var(--ink-soft,#55515F);font-variant-numeric:tabular-nums}.ds-bar .s strong{color:var(--ink,#25232C);font-weight:600}.ds-bar button{display:inline-flex;align-items:center;gap:8px;min-height:44px;padding:0 24px;background:var(--ink,#25232C);color:var(--paper,#F5F4F7);border:1px solid var(--ink,#25232C);border-radius:0;font:600 1rem 'Hanken Grotesk',system-ui,sans-serif;cursor:pointer}.ds-bar button:hover{background:#3A3744}.ds-bar button:focus-visible{outline:2px solid var(--ink,#25232C);outline-offset:3px}"
+    }
+  ],
+  "narrative": {
+    "northStar": "The Bookbinder's Order Book",
+    "overview": "**Creative North Star: \"The Bookbinder's Order Book\"**\n\nA quiet stationery boutique. The pastels are not paint on the page; they are linen-weave bookbinding cloth, laid down as discrete surfaces on a cool, almost-white paper ground and written over in charcoal ink. Names sit on small white paper labels tipped onto the cloth. Ordering happens on a numbered carbon-copy order slip that docks slim at the bottom edge and unfolds upward into the full sheet, its pink and blue duplicate copies fanning out beneath it.\n\nThe register is classy and familiar: a standard shop layout (header, intro, product grid, updates, about, footer) with no novelty navigation. Density is calm. Colour arrives in tiles, never in floods, so the page reads as cool paper with a few swatches of cloth on it. A literary serif speaks for names, headings and totals; a plain grotesk handles every working word (prices, counts, buttons, fields). The system rejects the pastel-gradient cutesy shop, wall-to-wall pink and purple, die-cut sticker motifs, and the always-open cart sidebar; it must not read as made for children or for one gender.\n\nMotion is paper-weight: short, eased with a long-tail out curve, never bouncy. There is one orchestrated arrival on load and one signature unfold for the order sheet. With reduced motion requested, everything is instant.",
+    "keyCharacteristics": [
+      "Cool paper ground, charcoal ink, book-cloth colour only as bounded surfaces.",
+      "Linen-weave texture over every cloth surface; flat paper everywhere else.",
+      "Square corners throughout; hairline rules do the structural work.",
+      "White tipped-on paper labels are the only lifted objects at rest.",
+      "Charcoal solid buttons; one quiet outlined variant.",
+      "Serif for names and headings, grotesk for everything operational, tabular figures for every number.",
+      "A docked order slip with tinted duplicate copies as the signature component."
+    ],
+    "rules": [
+      {
+        "name": "The Cloth Is a Surface Rule",
+        "body": "Book-cloth colours appear only as bounded rectangles: product tiles, one intro feature panel, one About swatch. They are never page fill, section backgrounds, text colour, or button colour.",
+        "section": "colors"
+      },
+      {
+        "name": "The Cloth Carries Linen Rule",
+        "body": "Every cloth surface layers the procedural linen overlay (`assets/img/linen.png`, 240px tile, generated by `tools/linen-generator.py`) over its colour. Flat pastel blocks are not cloth.",
+        "section": "colors"
+      },
+      {
+        "name": "The Ink Does the Talking Rule",
+        "body": "Interactive emphasis is charcoal, never a pastel. Buttons, selected chips, focus rings and the slip edge are all ink.",
+        "section": "colors"
+      },
+      {
+        "name": "The Named Things Are Serif Rule",
+        "body": "Products, sections, the wordmark, the sheet, and totals speak in Castoro. Prices, counts, controls and fields speak in Hanken Grotesk.",
+        "section": "typography"
+      },
+      {
+        "name": "The Honest Figures Rule",
+        "body": "Every price, count, date, total and order number sets tabular numerals (`font-variant-numeric: tabular-nums`).",
+        "section": "typography"
+      },
+      {
+        "name": "The No-Shouting Rule",
+        "body": "No uppercase runs and no wide tracking. Emphasis comes from weight 600 or the serif, never from case.",
+        "section": "typography"
+      },
+      {
+        "name": "The Only Paper Lifts Rule",
+        "body": "A shadow means \"a sheet of paper is sitting on something.\" Buttons, chips, inputs and product cards stay flat.",
+        "section": "elevation"
+      }
+    ],
+    "dos": [
+      "**Do** keep the ground Cool Paper (#F5F4F7) and set text in Charcoal Ink (#25232C), with Graphite (#55515F) for secondary copy.",
+      "**Do** confine book-cloth colour to bounded tiles and panels, always with the linen overlay at 240px.",
+      "**Do** put names on white tipped-on paper labels when they sit on cloth.",
+      "**Do** use charcoal solid square buttons for primary actions and the quiet outlined variant for the one secondary action.",
+      "**Do** divide content with 1px hairlines (#DEDBE4) and mark section heads with a 1px ink rule.",
+      "**Do** set every price, count, date and order number in tabular figures.",
+      "**Do** give every new motion the paper-weight grammar (short, `cubic-bezier(0.16, 1, 0.3, 1)`, no bounce) and make it instant under reduced motion.",
+      "**Do** label placeholder content visibly (Sample tag, \"Photo coming soon\")."
+    ],
+    "donts": [
+      "**Don't** use book-cloth or copy tints as page fill, section backgrounds, gradients, text colour or button colour.",
+      "**Don't** round corners on controls, tiles, labels or panels.",
+      "**Don't** use die-cut sticker shapes, outlines or sticker-style badges.",
+      "**Don't** put shadows on buttons, chips, inputs or cards, and never use hard offset shadows.",
+      "**Don't** add uppercase tracked labels or kicker lines above headings.",
+      "**Don't** introduce a cart sidebar or a second fixed bar; the docked slip is the only persistent ordering surface.",
+      "**Don't** make it read as childish, busy or washed out: no confetti, no bouncing, no wall-to-wall pastel."
+    ]
+  }
+}

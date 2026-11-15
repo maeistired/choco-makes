@@ -13,6 +13,7 @@ Static HTML site (owner's choice), hosted on GitHub Pages. Repository: `~/Docume
 ## Users
 
 - **Primary:** people who discover Choco Makes at a one-off small market, then come back to the site later to see what's available and order directly.
+- **Audience (owner, 2026-11-15):** university students, men and women alike. The site must not read as made for kids or for one gender.
 - **Ongoing:** anyone who wants to order handmade notebooks or 3D-printed clicker fidgets from Choco Makes after the market, at any time.
 - **Owner:** the maker, who updates inventory, posts updates for customers, and receives orders and demand signals.
 
@@ -43,9 +44,15 @@ A small independent maker of handmade notebooks and 3D-printed clicker fidgets. 
 
 **Product range.** Notebooks and clicker fidgets for now, with no fixed pattern yet. Categories and variants must stay flexible.
 
+**Decided (owner, 2026-11-15):**
+- Structure: a single scrolling page (shop, updates, about, order sheet), one link to share.
+- Order delivery: Web3Forms, emailed to the owner. Sold-out interest requests use the same channel.
+- Inventory: an edited data file in the repo (products data), committed to update the site.
+- Post-order confirmation copy: the owner writes it; ship a clearly marked placeholder until then.
+- Currency: Canadian dollars (CAD).
+- Customer updates: short dated notes, newest first, kept in the same data file as products.
+
 **Open decisions (do not assume):**
-- Order delivery: a free form service (e.g. Formspree, Web3Forms) or Google Form/Sheet. Undecided. The sold-out interest signal will presumably use the same channel, but that is unconfirmed.
-- How inventory is updated: an edited data file vs. a Google Sheet. Undecided.
 - Pickup, delivery, and payment. Undecided; the shop is currently unofficial.
 - Domain name.
 
@@ -58,6 +65,8 @@ A small independent maker of handmade notebooks and 3D-printed clicker fidgets. 
 - **Voice / personality:** cozy, happy, cute, cool, unique, dopamine.
 - **Brand components requested:** a colour palette and a consistent, efficient design system used throughout the site.
 - No logo, fonts, tagline, or photography exist yet.
+- **Tone (owner, 2026-11-15):** classy, with a standard, familiar shop layout. Keep the lilac / pink / light-blue palette but use it with restraint, not as wall-to-wall pink and purple. No die-cut-sticker motifs (the owner does not make stickers).
+- **Must not feel:** too busy or overwhelming (dopamine must never get in the way of ordering), babyish, childish, or overly playful, or plain and washed-out.
 
 ## Evidence on Hand
 

@@ -1,0 +1,17 @@
+{
+  "detector": {
+    "ignoreRules": [],
+    "ignoreFiles": [],
+    "ignoreValues": [
+      {
+        "rule": "cramped-padding",
+        "value": "*",
+        "files": [
+          "index.html"
+        ],
+        "createdAt": "2026-11-15T20:49:49.054Z",
+        "reason": "finish reviewer verified from screenshots: hairline-ruled rows and sections are inset by .wrap padding; static check cannot see it"
+      }
+    ]
+  }
+}

@@ -1,0 +1,530 @@
+/* Choco Makes shop: catalogue, order sheet, interest requests.
+   Everything the owner edits lives in data/shop.json. */
+(() => {
+  "use strict";
+  document.documentElement.classList.add("js");
+
+  const DATA_URL = "data/shop.json";
+  const STORE_KEY = "chocomakes.sheet.v1";
+  const WEB3FORMS_URL = "https://api.web3forms.com/submit";
+  const PLACEHOLDER_CONFIRMATION =
+    "[Placeholder] Thanks, your order sheet has been sent to Choco Makes. (Owner: write what happens next in data/shop.json → settings.orderConfirmation.)";
+
+  const $ = (sel, root = document) => root.querySelector(sel);
+  const $$ = (sel, root = document) => [...root.querySelectorAll(sel)];
+
+  let shop = null;
+  let money = null;
+  let sheet = loadSheet();
+
+  /* ---------- helpers ---------- */
+  function formatMoney(n) {
+    return money.format(n).replace(/\.00$/, "");
+  }
+  function newSheetNo() {
+    const d = new Date();
+    const mmdd = String(d.getMonth() + 1).padStart(2, "0") + String(d.getDate()).padStart(2, "0");
+    const chars = "ABCDEFGHJKMNPQRSTUVWXYZ23456789";
+    let tail = "";
+    for (let i = 0; i < 3; i++) tail += chars[Math.floor(Math.random() * chars.length)];
+    return `${mmdd}-${tail}`;
+  }
+  function loadSheet() {
+    try {
+      const s = JSON.parse(localStorage.getItem(STORE_KEY));
+      if (s && Array.isArray(s.lines) && s.no) return s;
+    } catch (_) { /* fresh sheet */ }
+    return { no: newSheetNo(), lines: [] };
+  }
+  function saveSheet() {
+    try { localStorage.setItem(STORE_KEY, JSON.stringify(sheet)); } catch (_) { /* private mode */ }
+  }
+  function announce(msg) {
+    const el = $("[data-announce]");
+    el.textContent = "";
+    requestAnimationFrame(() => { el.textContent = msg; });
+  }
+  function el(tag, attrs = {}, ...kids) {
+    const n = document.createElement(tag);
+    for (const [k, v] of Object.entries(attrs)) {
+      if (k === "class") n.className = v;
+      else if (k === "text") n.textContent = v;
+      else if (v !== false && v != null) n.setAttribute(k, v === true ? "" : v);
+    }
+    for (const k of kids) if (k) n.append(k);
+    return n;
+  }
+  const icon = (d) => {
+    const s = document.createElementNS("http://www.w3.org/2000/svg", "svg");
+    s.setAttribute("viewBox", "0 0 24 24");
+    s.setAttribute("aria-hidden", "true");
+    const p = document.createElementNS("http://www.w3.org/2000/svg", "path");
+    p.setAttribute("d", d);
+    s.append(p);
+    return s;
+  };
+  const ICON = { minus: "M6 12h12", plus: "M12 6v12M6 12h12", x: "M7 7l10 10M17 7L7 17" };
+
+  /* ---------- stock model ---------- */
+  const product = (id) => shop.products.find((p) => p.id === id);
+  const hasVariants = (p) => Array.isArray(p.variants) && p.variants.length > 0;
+  function stockOf(p, variant) {
+    if (hasVariants(p)) {
+      const v = p.variants.find((x) => x.name === variant);
+      return v ? Math.max(0, v.stock | 0) : 0;
+    }
+    return Math.max(0, p.stock | 0);
+  }
+  const totalStock = (p) => hasVariants(p) ? p.variants.reduce((a, v) => a + Math.max(0, v.stock | 0), 0) : Math.max(0, p.stock | 0);
+  const lineKey = (id, variant) => `${id}::${variant || ""}`;
+  const findLine = (id, variant) => sheet.lines.find((l) => lineKey(l.id, l.variant) === lineKey(id, variant));
+
+  /* Bundle ("buy N for $X") applies per product, across its variants. */
+  function priceTotals() {
+    let subtotal = 0, total = 0;
+    const perLine = new Map();
+    const byProduct = new Map();
+    for (const l of sheet.lines) {
+      const p = product(l.id);
+      if (!p) continue;
+      byProduct.set(p.id, (byProduct.get(p.id) || 0) + l.qty);
+    }
+    const productTotals = new Map();
+    for (const [id, qty] of byProduct) {
+      const p = product(id);
+      const full = qty * p.price;
+      let t = full;
+      if (p.bundle && p.bundle.qty > 1 && p.bundle.price != null) {
+        const sets = Math.floor(qty / p.bundle.qty);
+        t = sets * p.bundle.price + (qty - sets * p.bundle.qty) * p.price;
+      }
+      subtotal += full;
+      total += t;
+      productTotals.set(id, { qty, full, t });
+    }
+    // lines show full price; bundle pricing is shown once as its own row
+    for (const l of sheet.lines) {
+      const p = product(l.id);
+      if (p) perLine.set(lineKey(l.id, l.variant), l.qty * p.price);
+    }
+    return { subtotal, total, savings: subtotal - total, perLine, productTotals };
+  }
+
+  /* Drop lines whose product disappeared and clamp to current stock. */
+  function reconcileSheet() {
+    sheet.lines = sheet.lines
+      .filter((l) => product(l.id) && (!hasVariants(product(l.id)) || product(l.id).variants.some((v) => v.name === l.variant)))
+      .map((l) => ({ ...l, qty: Math.min(l.qty, stockOf(product(l.id), l.variant)) }))
+      .filter((l) => l.qty > 0);
+    saveSheet();
+  }
+
+  /* ---------- catalogue ---------- */
+  function renderPhoto(target, p, wide) {
+    target.textContent = "";
+    if (p.photo) {
+      target.append(el("img", { src: p.photo, alt: p.photoAlt || p.name, loading: "lazy", decoding: "async" }));
+    } else {
+      const isClicker = /click/i.test(p.category || "");
+      target.append(el("div", { class: "ph-object" + (isClicker && !wide ? " ph-object--wide" : ""), text: "Photo coming soon" }));
+    }
+  }
+
+  function renderFeature() {
+    const p = shop.products.find((x) => x.featured) || shop.products[0];
+    const fig = $("#feature");
+    const label = $("[data-feature-label]");
+    if (!p) { fig.hidden = true; return; }
+    fig.className = `feature cloth cloth--${p.cloth || "lilac"}`;
+    const media = $("[data-feature-media]");
+    if (p.photo) renderPhoto(media, p, true); else media.textContent = "";
+    const left = totalStock(p);
+    label.textContent = "";
+    label.append(
+      el("a", { href: `#p-${p.id}` },
+        el("span", { class: "label__name", text: p.name }),
+        el("span", { class: "label__meta", text: `${formatMoney(p.price)}${p.bundle ? ` · ${p.bundle.qty} for ${formatMoney(p.bundle.price)}` : ""} · ${left ? `${left} left` : "All gone for now"}` }),
+        p.photo ? null : el("span", { class: "label__meta", text: "Photo coming soon" })
+      )
+    );
+  }
+
+  function renderCatalogue() {
+    const root = $("[data-catalogue]");
+    root.textContent = "";
+    const order = [...(shop.categories || [])];
+    for (const p of shop.products) if (p.category && !order.includes(p.category)) order.push(p.category);
+    const rank = (p) => { const i = order.indexOf(p.category); return i < 0 ? order.length : i; };
+    const list = [...shop.products].sort((a, b) => rank(a) - rank(b));
+    if (!list.length) {
+      root.append(el("p", { class: "status-note", text: "Nothing listed right now. Check the updates below for the next batch." }));
+      return;
+    }
+    root.append(el("div", { class: "grid" }, ...list.map(renderProduct)));
+  }
+
+  function renderProduct(p) {
+    const node = $("#tpl-product").content.firstElementChild.cloneNode(true);
+    node.id = `p-${p.id}`;
+    node.dataset.id = p.id;
+    $(".product__cloth", node).classList.add(`cloth--${p.cloth || "lilac"}`);
+    $("[data-tag]", node).hidden = !p.sample;
+    const cat = $("[data-category]", node);
+    cat.textContent = p.category || "";
+    cat.hidden = !p.category;
+    renderPhoto($("[data-media]", node), p);
+    const nameId = `name-${p.id}`;
+    const name = $("[data-name]", node);
+    name.id = nameId;
+    name.textContent = p.name;
+    node.setAttribute("aria-labelledby", nameId);
+
+    const price = $("[data-price]", node);
+    price.append(formatMoney(p.price));
+    if (p.bundle) price.append(el("span", { class: "bundle", text: ` · ${p.bundle.qty} for ${formatMoney(p.bundle.price)}` }));
+    $("[data-desc]", node).textContent = p.description || "";
+    if (!p.description) $("[data-desc]", node).remove();
+
+    if (hasVariants(p)) {
+      const fs = $("[data-variants]", node);
+      fs.hidden = false;
+      $("[data-variant-legend]", node).textContent = p.variantLabel || "Option";
+      const opts = $("[data-variant-options]", node);
+      const firstAvail = p.variants.find((v) => v.stock > 0) || p.variants[0];
+      p.variants.forEach((v, i) => {
+        const out = !(v.stock > 0);
+        const input = el("input", { type: "radio", name: `v-${p.id}`, value: v.name, id: `v-${p.id}-${i}`, checked: v === firstAvail });
+        const label = el("label", { class: "variant" + (out ? " is-out" : ""), for: `v-${p.id}-${i}` },
+          input, el("span", { text: v.name + (out ? " (gone)" : "") }));
+        input.addEventListener("change", () => syncProduct(node, p));
+        opts.append(label);
+      });
+    }
+
+    $("[data-add]", node).addEventListener("click", () => addToSheet(p, selectedVariant(node, p)));
+    const notify = $("[data-notify]", node);
+    const form = $("[data-interest]", node);
+    const formId = `interest-${p.id}`;
+    form.id = formId;
+    notify.setAttribute("aria-controls", formId);
+    notify.addEventListener("click", () => {
+      const open = form.hidden;
+      form.hidden = !open;
+      notify.setAttribute("aria-expanded", String(open));
+      if (open) { notify.hidden = true; $("input[name=contact]", form).focus(); }
+    });
+    form.addEventListener("submit", (e) => { e.preventDefault(); sendInterest(form, p, selectedVariant(node, p)); });
+
+    syncProduct(node, p);
+    return node;
+  }
+
+  function selectedVariant(node, p) {
+    if (!hasVariants(p)) return null;
+    const c = $("input[type=radio]:checked", node);
+    return c ? c.value : p.variants[0].name;
+  }
+
+  /* Reflect stock vs. what's already on the sheet for one card. */
+  function syncProduct(node, p) {
+    const variant = selectedVariant(node, p);
+    const stock = stockOf(p, variant);
+    const onSheet = (findLine(p.id, variant) || { qty: 0 }).qty;
+    const remaining = stock - onSheet;
+    const allGone = totalStock(p) === 0;
+    node.classList.toggle("is-soldout", allGone);
+    $("[data-gone]", node).hidden = !allGone;
+
+    const stockEl = $("[data-stock]", node);
+    const what = variant ? `${variant}: ` : "";
+    stockEl.classList.toggle("is-low", stock > 0 && stock <= 3);
+    if (stock === 0) stockEl.textContent = `${what}All gone for now`;
+    else stockEl.textContent = `${what}${stock} left${onSheet ? ` · ${onSheet} on your sheet` : ""}`;
+
+    const add = $("[data-add]", node);
+    const notify = $("[data-notify]", node);
+    const form = $("[data-interest]", node);
+    add.hidden = stock === 0;
+    add.disabled = remaining <= 0;
+    add.textContent = remaining <= 0 && stock > 0 ? "All on your sheet" : "Add to sheet";
+    notify.hidden = stock !== 0 || !form.hidden;
+    if (stock !== 0) { form.hidden = true; notify.setAttribute("aria-expanded", "false"); }
+  }
+  const syncAll = () => $$(".product").forEach((n) => syncProduct(n, product(n.dataset.id)));
+
+  /* ---------- sheet ---------- */
+  function addToSheet(p, variant) {
+    const stock = stockOf(p, variant);
+    const line = findLine(p.id, variant);
+    if (line) {
+      if (line.qty >= stock) return;
+      line.qty += 1;
+    } else {
+      if (stock < 1) return;
+      sheet.lines.push({ id: p.id, variant, qty: 1 });
+    }
+    saveSheet();
+    renderSheet(true);
+    syncAll();
+    announce(`Added ${p.name}${variant ? `, ${variant}` : ""} to your order sheet.`);
+  }
+
+  function setQty(line, qty) {
+    const p = product(line.id);
+    const max = stockOf(p, line.variant);
+    line.qty = Math.max(0, Math.min(qty, max));
+    if (line.qty === 0) sheet.lines = sheet.lines.filter((l) => l !== line);
+    saveSheet();
+    renderSheet(true);
+    syncAll();
+  }
+
+  function renderSheet(tick) {
+    const { subtotal, total, savings, perLine } = priceTotals();
+    const count = sheet.lines.reduce((a, l) => a + l.qty, 0);
+    $("[data-sheet-no]").textContent = `No. ${sheet.no}`;
+    $("[data-slip-no]").textContent = `No. ${sheet.no}`;
+
+    const summary = $("[data-slip-summary]");
+    summary.textContent = "";
+    if (count) summary.append(`${count} ${count === 1 ? "item" : "items"} · `, el("strong", { text: formatMoney(total) }), ` ${shop.settings.currency || "CAD"}`);
+    else summary.append("Nothing added yet");
+    if (tick) { summary.classList.remove("tick"); void summary.offsetWidth; summary.classList.add("tick"); }
+
+    const list = $("[data-lines]");
+    list.textContent = "";
+    for (const l of sheet.lines) {
+      const p = product(l.id);
+      const max = stockOf(p, l.variant);
+      const label = `${p.name}${l.variant ? `, ${l.variant}` : ""}`;
+      const minus = el("button", { type: "button", "aria-label": `One fewer ${label}` }, icon(ICON.minus));
+      const plus = el("button", { type: "button", "aria-label": `One more ${label}`, disabled: l.qty >= max }, icon(ICON.plus));
+      const remove = el("button", { type: "button", class: "remove", "aria-label": `Remove ${label}` }, icon(ICON.x));
+      minus.addEventListener("click", () => setQty(l, l.qty - 1));
+      plus.addEventListener("click", () => setQty(l, l.qty + 1));
+      remove.addEventListener("click", () => { setQty(l, 0); announce(`Removed ${label}.`); });
+      const meta = `${formatMoney(p.price)} each${p.bundle ? ` · ${p.bundle.qty} for ${formatMoney(p.bundle.price)}` : ""}${l.qty >= max ? " · that's all of them" : ""}`;
+      list.append(el("li", {},
+        el("div", { class: "line__info" },
+          el("span", { class: "line__name", text: label }),
+          el("span", { class: "line__meta", text: meta })),
+        el("div", { class: "stepper", role: "group", "aria-label": `Quantity of ${label}` },
+          minus, el("output", { "aria-live": "polite", text: String(l.qty) }), plus),
+        el("span", { class: "line__total", text: formatMoney(perLine.get(lineKey(l.id, l.variant)) || 0) }),
+        remove
+      ));
+    }
+    $("[data-empty]").hidden = count > 0;
+    $("[data-totals]").hidden = count === 0;
+    $("[data-subtotal]").textContent = formatMoney(subtotal);
+    $("[data-savings-row]").hidden = savings <= 0;
+    $("[data-savings]").textContent = `\u2212${formatMoney(savings)}`;
+    $("[data-total]").textContent = `${formatMoney(total)} ${shop.settings.currency || "CAD"}`;
+    $("[data-send]").disabled = count === 0;
+  }
+
+  /* ---------- slip open / close ---------- */
+  const slip = $("[data-slip]");
+  const sheetEl = $("[data-sheet]");
+  const toggle = $("[data-toggle]");
+  function openSheet() {
+    if (!sheetEl.hidden) return;
+    sheetEl.hidden = false;
+    sheetEl.classList.remove("is-leaving");
+    sheetEl.classList.add("is-entering");
+    slip.classList.add("is-open");
+    toggle.setAttribute("aria-expanded", "true");
+    $("[data-toggle-label]").textContent = "Fold away";
+    $("[data-sheet-title]").focus({ preventScroll: true });
+  }
+  function closeSheet(returnFocus = true) {
+    if (sheetEl.hidden) return;
+    slip.classList.remove("is-open");
+    toggle.setAttribute("aria-expanded", "false");
+    $("[data-toggle-label]").textContent = "Review & send";
+    const reduce = matchMedia("(prefers-reduced-motion: reduce)").matches;
+    const done = () => { sheetEl.hidden = true; sheetEl.classList.remove("is-leaving", "is-entering"); };
+    if (reduce) done();
+    else { sheetEl.classList.remove("is-entering"); sheetEl.classList.add("is-leaving"); sheetEl.addEventListener("animationend", done, { once: true }); }
+    if (returnFocus) toggle.focus();
+  }
+  toggle.addEventListener("click", () => (sheetEl.hidden ? openSheet() : closeSheet()));
+  document.addEventListener("keydown", (e) => { if (e.key === "Escape" && !sheetEl.hidden) closeSheet(); });
+
+  /* ---------- sending ---------- */
+  const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+  function validContact(v) {
+    v = v.trim();
+    if (v.includes("@")) return EMAIL_RE.test(v);
+    return v.replace(/\D/g, "").length >= 7;
+  }
+  function setFieldError(input, msg) {
+    const err = $(`#${input.id}-error`);
+    input.setAttribute("aria-invalid", msg ? "true" : "false");
+    const ids = (input.getAttribute("aria-describedby") || "").split(" ").filter((x) => x && x !== err.id);
+    if (msg) ids.push(err.id);
+    input.setAttribute("aria-describedby", ids.join(" "));
+    err.textContent = msg || "";
+    err.hidden = !msg;
+  }
+  function accessKey() {
+    return (shop.settings.web3formsAccessKey || "").trim();
+  }
+  async function submitToOwner(fields) {
+    if (!accessKey()) throw new Error("not-configured");
+    const res = await fetch(WEB3FORMS_URL, {
+      method: "POST",
+      headers: { "Content-Type": "application/json", Accept: "application/json" },
+      body: JSON.stringify({ access_key: accessKey(), from_name: "Choco Makes website", ...fields }),
+    });
+    const json = await res.json().catch(() => ({}));
+    if (!res.ok || json.success === false) throw new Error(json.message || "send-failed");
+    return json;
+  }
+  function failureMessage(err) {
+    if (err.message === "not-configured") return "Sending isn't switched on yet. The shop is still being set up, so please try again soon.";
+    if (err instanceof TypeError) return "Couldn't reach the internet. Check your connection and try again. Your sheet is saved on this device.";
+    return "That didn't send. Please try again in a moment. Your sheet is saved on this device.";
+  }
+
+  const orderForm = $("[data-order-form]");
+  orderForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const status = $("[data-form-status]");
+    status.className = "form-status";
+    status.textContent = "";
+    const nameIn = $("#order-name");
+    const contactIn = $("#order-contact");
+    const nameOk = nameIn.value.trim().length > 0;
+    const contactOk = validContact(contactIn.value);
+    setFieldError(nameIn, nameOk ? "" : "Add your name so the maker knows who the order is from.");
+    setFieldError(contactIn, contactOk ? "" : "Add a phone number or an email address the maker can reply to.");
+    if (!nameOk) return nameIn.focus();
+    if (!contactOk) return contactIn.focus();
+    if (!sheet.lines.length) return;
+    if ($("input[name=botcheck]", orderForm).checked) return;
+
+    const { subtotal, total, savings, productTotals } = priceTotals();
+    const cur = shop.settings.currency || "CAD";
+    const rows = sheet.lines.map((l) => {
+      const p = product(l.id);
+      return `${l.qty} × ${p.name}${l.variant ? ` (${l.variant})` : ""} @ ${formatMoney(p.price)}`;
+    });
+    const bundleRows = [...productTotals].filter(([id, t]) => t.t < t.full).map(([id, t]) => `${product(id).name}: ${t.qty} for ${formatMoney(t.t)} with bundle pricing`);
+    const contact = contactIn.value.trim();
+    const text = [
+      `Order sheet No. ${sheet.no}`, "",
+      ...rows, "",
+      ...(bundleRows.length ? [...bundleRows, ""] : []),
+      `Items: ${formatMoney(subtotal)}`,
+      ...(savings > 0 ? [`Bundle pricing: −${formatMoney(savings)}`] : []),
+      `Total: ${formatMoney(total)} ${cur}`,
+    ].join("\n");
+
+    const send = $("[data-send]");
+    send.disabled = true;
+    send.textContent = "Sending…";
+    try {
+      await submitToOwner({
+        subject: `Order sheet No. ${sheet.no} from ${nameIn.value.trim()}`,
+        name: nameIn.value.trim(),
+        contact,
+        ...(contact.includes("@") ? { email: contact } : {}),
+        order: text,
+        total: `${formatMoney(total)} ${cur}`,
+      });
+      const sentNo = sheet.no;
+      sheet = { no: newSheetNo(), lines: [] };
+      saveSheet();
+      renderSheet(true);
+      syncAll();
+      orderForm.reset();
+      status.className = "form-status is-done";
+      status.textContent = `Sheet No. ${sentNo} sent. ${(shop.settings.orderConfirmation || "").trim() || PLACEHOLDER_CONFIRMATION}`;
+    } catch (err) {
+      status.className = "form-status is-error";
+      status.textContent = failureMessage(err);
+    } finally {
+      send.textContent = "Send order sheet";
+      send.disabled = sheet.lines.length === 0;
+    }
+  });
+
+  async function sendInterest(form, p, variant) {
+    const input = $("input[name=contact]", form);
+    const status = $(".interest__status", form);
+    status.className = "interest__status";
+    if (!validContact(input.value)) {
+      input.setAttribute("aria-invalid", "true");
+      status.classList.add("is-error");
+      status.textContent = "Add a phone number or an email address.";
+      return input.focus();
+    }
+    input.setAttribute("aria-invalid", "false");
+    if ($("input[name=botcheck]", form).checked) return;
+    const btn = $("button[type=submit]", form);
+    btn.disabled = true;
+    status.textContent = "Sending…";
+    const label = `${p.name}${variant ? ` (${variant})` : ""}`;
+    try {
+      const contact = input.value.trim();
+      await submitToOwner({
+        subject: `Interest: ${label}`,
+        contact,
+        ...(contact.includes("@") ? { email: contact } : {}),
+        item: label,
+        message: `Someone would like to know when ${label} is back.`,
+      });
+      status.classList.add("is-ok");
+      status.textContent = "Thanks, you'll hear when it's back.";
+      input.value = "";
+    } catch (err) {
+      status.classList.add("is-error");
+      status.textContent = failureMessage(err);
+    } finally {
+      btn.disabled = false;
+    }
+  }
+
+  /* ---------- updates ---------- */
+  function renderUpdates() {
+    const list = $("[data-updates]");
+    list.textContent = "";
+    const items = [...(shop.updates || [])].sort((a, b) => String(b.date).localeCompare(String(a.date)));
+    if (!items.length) {
+      list.append(el("li", {}, el("span"), el("p", { text: "No updates yet." })));
+      return;
+    }
+    const fmt = new Intl.DateTimeFormat(shop.settings.locale || "en-CA", { year: "numeric", month: "long", day: "numeric", timeZone: "UTC" });
+    for (const u of items) {
+      const d = new Date(`${u.date}T00:00:00Z`);
+      const p = el("p", { text: u.text });
+      if (u.sample) p.append(el("span", { class: "is-sample", text: "Sample" }));
+      list.append(el("li", {}, el("time", { datetime: u.date, text: isNaN(d) ? u.date : fmt.format(d) }), p));
+    }
+  }
+
+  /* ---------- boot ---------- */
+  async function boot() {
+    $("[data-year]").textContent = new Date().getFullYear();
+    try {
+      const res = await fetch(DATA_URL, { cache: "no-cache" });
+      if (!res.ok) throw new Error(res.status);
+      shop = await res.json();
+    } catch (err) {
+      $("[data-catalogue]").innerHTML = "";
+      $("[data-catalogue]").append(el("p", { class: "status-note is-error", text: "The shop couldn't load. Refresh the page to try again." }));
+      $("[data-feature-label]").textContent = "Couldn't load the shop.";
+      return;
+    }
+    shop.settings = shop.settings || {};
+    shop.products = shop.products || [];
+    money = new Intl.NumberFormat(shop.settings.locale || "en-CA", { style: "currency", currency: shop.settings.currency || "CAD" });
+    reconcileSheet();
+    renderFeature();
+    renderCatalogue();
+    renderUpdates();
+    renderSheet(false);
+  }
+  boot();
+})();
