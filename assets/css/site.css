@@ -72,7 +72,7 @@ body {
 h1, h2, h3, h4, p, ul, ol, dl, dd, figure { margin: 0; }
 ul, ol { padding: 0; list-style: none; }
 img { display: block; max-width: 100%; }
-button, input { font: inherit; color: inherit; }
+button, input, textarea { font: inherit; color: inherit; }
 a { color: inherit; text-underline-offset: 0.2em; text-decoration-thickness: 1px; }
 ::selection { background: var(--cloth-lilac); color: var(--ink); }
 :focus-visible { outline: 2px solid var(--ink); outline-offset: 3px; }
@@ -226,6 +226,12 @@ html { scrollbar-color: var(--cloth-lilac) var(--paper); }
   min-height: 44px; padding: 0 var(--s3); border: 1px solid var(--ink-soft); border-radius: 0; background: var(--sheet);
   font-size: 1rem; font-weight: 400; width: 100%;
 }
+.field textarea {
+  min-height: 88px; padding: var(--s2) var(--s3); border: 1px solid var(--ink-soft); border-radius: 0; background: var(--sheet);
+  font-size: 1rem; line-height: 1.5; width: 100%; resize: vertical;
+}
+.field textarea:focus-visible { outline: 2px solid var(--ink); outline-offset: 0; border-color: var(--ink); }
+.field__optional { font-weight: 400; color: var(--ink-soft); }
 .interest input:focus-visible, .field input:focus-visible { outline: 2px solid var(--ink); outline-offset: 0; border-color: var(--ink); }
 .interest__status { grid-column: 1 / -1; font-size: 0.875rem; }
 .interest__status:empty { display: none; }

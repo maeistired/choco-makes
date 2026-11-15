@@ -445,6 +445,7 @@
     });
     const bundleRows = dealTotals.map((d) => `${d.label.charAt(0).toUpperCase()}${d.label.slice(1)}: ${d.qty} for ${formatMoney(d.t)} with bundle pricing`);
     const contact = contactIn.value.trim();
+    const notes = $("#order-notes").value.trim();
     const text = [
       `Order sheet No. ${sheet.no}`, "",
       ...rows, "",
@@ -452,6 +453,7 @@
       `Items: ${formatMoney(subtotal)}`,
       ...(savings > 0 ? [`Bundle pricing: −${formatMoney(savings)}`] : []),
       `Total: ${formatMoney(total)} ${cur}`,
+      ...(notes ? ["", "Notes from the customer:", notes] : []),
     ].join("\n");
 
     const send = $("[data-send]");
@@ -464,6 +466,7 @@
         contact,
         ...(contact.includes("@") ? { email: contact } : {}),
         order: text,
+        ...(notes ? { notes } : {}),
         total: `${formatMoney(total)} ${cur}`,
       });
       const sentNo = sheet.no;

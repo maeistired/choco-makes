@@ -122,6 +122,11 @@
               <p class="field__hint" id="order-contact-hint">So the maker can reply to you.</p>
               <p class="field__error" id="order-contact-error" hidden></p>
             </div>
+            <div class="field">
+              <label for="order-notes">Notes <span class="field__optional">(optional)</span></label>
+              <textarea id="order-notes" name="notes" rows="3" maxlength="1000" aria-describedby="order-notes-hint"></textarea>
+              <p class="field__hint" id="order-notes-hint">Questions, or anything else the maker should know.</p>
+            </div>
             <input class="honeypot" type="checkbox" name="botcheck" tabindex="-1" autocomplete="off" aria-hidden="true">
             <button class="button button--wide" type="submit" data-send>Send order sheet</button>
             <p class="form-status" data-form-status role="status" aria-live="polite"></p>
