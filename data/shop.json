@@ -67,6 +67,18 @@
         {
           "name": "Water",
           "stock": 10
+        },
+        {
+          "name": "Lilac",
+          "stock": 12
+        },
+        {
+          "name": "Pink",
+          "stock": 12
+        },
+        {
+          "name": "Black",
+          "stock": 12
         }
       ]
     }
