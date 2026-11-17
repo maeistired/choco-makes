@@ -51,6 +51,17 @@ Use `python3 tools/build_shop.py --check` to check without changing anything.
 
 Settings (currency, the order key, the confirmation message) stay in `data/shop.json` under `settings`. The rebuild never touches them.
 
+## Custom orders
+
+The **Custom orders** section (below the shop) lets people describe something they'd like made. It's a request, not an order: it emails you their idea, and you contact them to agree the details, quote and deposit. Requests arrive through the same Web3Forms inbox as order sheets, numbered like `C-1117-4KD`.
+
+Everything in it is edited in `data/shop.json` under `settings.custom` (the rebuild keeps your settings):
+
+- **open**: `true` to take requests, `false` to pause them. While paused, the section shows `closedMessage` instead of the form.
+- **kinds**: the choices for "What kind of custom piece?". Each has a `name`, a short `note`, and a `hint` that appears under the description box once picked. Add or remove kinds freely.
+- **quantities**: the "How many?" choices, e.g. `"1–4"`, `"5–10"`.
+- **terms**: the "How custom orders work" list (deposit, timing and so on). Each has a `title` and `text`. Customers must tick a box saying they've read them before sending.
+
 ## Turning on orders (Web3Forms)
 
 1. Go to web3forms.com, enter the email address orders should go to, and copy the **access key** it sends you.

@@ -53,6 +53,7 @@ A small independent maker of handmade notebooks and 3D-printed clicker fidgets. 
 - Post-order confirmation copy: the owner writes it; ship a clearly marked placeholder until then.
 - Currency: Canadian dollars (CAD).
 - Customer updates: short dated notes, newest first, kept in the same data file as products.
+- Custom orders (owner, 2026-11-17): a separate section below the shop collects custom requests (paper goods or 3D prints, quantity range, description, optional date, budget and reference link) and emails them via Web3Forms. It is a request, not an order: the owner follows up to quote and take a deposit. Kinds, quantities, terms and an open/closed switch live in `settings.custom`.
 
 **Open decisions (do not assume):**
 - Delivery or shipping. Not offered; undecided beyond on-campus pickup.

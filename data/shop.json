@@ -5,7 +5,68 @@
     "web3formsAccessKey": "1cf9024c-fffb-4479-85a0-e53346d4c370",
     "lowStockAt": 5,
     "orderConfirmation": "Thank you for your order! It's on its way to Choco Makes, and you'll get a reply by email soon to confirm your items and arrange a time for pickup on campus. You can pay by e-Transfer, contactless at pickup, or cash (exact change is appreciated, as change can't be guaranteed). Nothing has been charged yet.",
-    "headerPhoto": "assets/img/products/header.jpg"
+    "headerPhoto": "assets/img/products/header.jpg",
+    "custom": {
+      "open": true,
+      "closedMessage": "Custom requests are paused for now. Check the updates below to see when they reopen.",
+      "kinds": [
+        {
+          "name": "Paper goods",
+          "note": "Sketchbooks, notepads and other bound paper",
+          "hint": "Include the item, size, paper (cream, white, grid, lined, plain), cover colours, and anything personal like names or dates."
+        },
+        {
+          "name": "3D print",
+          "note": "Clickers, keychains and other printed pieces",
+          "hint": "Include what it is, roughly how big, the colours, and a link to a picture or file if you have one."
+        },
+        {
+          "name": "Not sure yet",
+          "note": "Describe the idea and you'll work it out together",
+          "hint": "Describe the idea in your own words. Rough is fine."
+        }
+      ],
+      "quantities": [
+        "1–4",
+        "5–10",
+        "11–20",
+        "20+"
+      ],
+      "terms": [
+        {
+          "title": "A request, not an order",
+          "text": "Sending a request doesn't commit you to anything and doesn't book a spot. The maker reads every request and contacts you to talk it through."
+        },
+        {
+          "title": "Quote first",
+          "text": "Before any work starts, you'll get a price and a realistic time estimate. Nothing is charged online."
+        },
+        {
+          "title": "Deposit",
+          "text": "Work starts once a deposit is paid. The amount is set in your quote. Custom pieces are made just for you and can't be resold, so the deposit can't be refunded once materials are bought or work has started. The rest is due at pickup."
+        },
+        {
+          "title": "Realistic timing",
+          "text": "Everything is made by one person, alongside the regular batches, so custom work takes time and larger quantities take longer. If you need it by a certain date, say so. The maker will tell you honestly if that isn't possible."
+        },
+        {
+          "title": "Handmade results",
+          "text": "Small differences in colour, stitching and print lines are part of handmade and 3D-printed work, and colours can look different on screen. For larger orders, the maker can send a photo of the first piece before making the rest."
+        },
+        {
+          "title": "Changes",
+          "text": "Changes after work has started may change the price and the timing."
+        },
+        {
+          "title": "What can be made",
+          "text": "The maker may turn down requests that can't be made well or safely, or that copy someone else's designs or brands."
+        },
+        {
+          "title": "Pickup and payment",
+          "text": "Same as regular orders: pickup on campus, and payment by e-Transfer, contactless at pickup, or cash."
+        }
+      ]
+    }
   },
   "categories": [
     "Handmade sketchbooks",

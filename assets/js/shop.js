@@ -682,6 +682,161 @@
     }
   }
 
+  /* ---------- custom orders ---------- */
+  /* A request, not an order: it collects the idea, then the maker follows up.
+     Kinds, quantities and terms come from settings.custom in data/shop.json. */
+  const CUSTOM_HINT = "Pick a kind above for tips on what to include. Rough ideas are fine.";
+
+  function renderCustom() {
+    const cfg = shop.settings.custom;
+    const section = $("#custom");
+    if (!cfg) {
+      section.hidden = true;
+      $$('a[href="#custom"]').forEach((a) => { a.closest("li").hidden = true; });
+      return;
+    }
+
+    const terms = $("[data-custom-terms]");
+    terms.textContent = "";
+    for (const t of cfg.terms || []) {
+      terms.append(el("li", {}, el("h4", { class: "terms__title", text: t.title }), el("p", { text: t.text })));
+    }
+
+    const form = $("[data-custom-form]");
+    const closed = $("[data-custom-closed]");
+    if (cfg.open === false) {
+      closed.textContent = cfg.closedMessage || "Custom requests are paused for now.";
+      closed.hidden = false;
+      form.hidden = true;
+      return;
+    }
+    closed.hidden = true;
+    form.hidden = false;
+
+    const kinds = $("[data-custom-kinds]");
+    kinds.textContent = "";
+    (cfg.kinds || []).forEach((k, i) => {
+      const input = el("input", { type: "radio", name: "kind", value: k.name, id: `custom-kind-${i}` });
+      input.addEventListener("change", () => {
+        $("[data-custom-hint]").textContent = k.hint || "Rough ideas are fine.";
+        choiceError("kind", "");
+      });
+      kinds.append(el("label", { class: "choice__card", for: `custom-kind-${i}` }, input,
+        el("span", {}, el("span", { class: "choice__name", text: k.name }), k.note ? el("span", { class: "choice__note", text: k.note }) : null)));
+    });
+
+    const qty = $("[data-custom-qty]");
+    qty.textContent = "";
+    (cfg.quantities || []).forEach((q, i) => {
+      const input = el("input", { type: "radio", name: "qty", value: q, id: `custom-qty-${i}` });
+      input.addEventListener("change", () => choiceError("qty", ""));
+      qty.append(el("label", { class: "variant", for: `custom-qty-${i}` }, input, el("span", { text: q })));
+    });
+  }
+
+  function choiceError(name, msg) {
+    const err = $(`#custom-${name}-error`);
+    err.textContent = msg;
+    err.hidden = !msg;
+  }
+
+  const customForm = $("[data-custom-form]");
+  customForm.addEventListener("submit", async (e) => {
+    e.preventDefault();
+    const status = $("[data-custom-status]");
+    status.className = "form-status";
+    status.textContent = "";
+    const kind = $("input[name=kind]:checked", customForm);
+    const qty = $("input[name=qty]:checked", customForm);
+    const ideaIn = $("#custom-idea");
+    const nameIn = $("#custom-name");
+    const emailIn = $("#custom-email");
+    const phoneIn = $("#custom-phone");
+    const agreeIn = $("#custom-agree");
+    const ideaOk = ideaIn.value.trim().length >= 10;
+    const nameOk = nameIn.value.trim().length > 0;
+    const emailOk = EMAIL_RE.test(emailIn.value.trim());
+    const phoneOk = !phoneIn.value.trim() || phoneIn.value.replace(/\D/g, "").length >= 7;
+    choiceError("kind", kind ? "" : "Pick the kind of piece, or “Not sure yet”.");
+    choiceError("qty", qty ? "" : "Pick roughly how many you'd like.");
+    setFieldError(ideaIn, ideaOk ? "" : "Describe the idea in a sentence or two so the maker knows where to start.");
+    setFieldError(nameIn, nameOk ? "" : "Add your name so the maker knows who the request is from.");
+    setFieldError(emailIn, emailOk ? "" : "Add an email address the maker can reply to, like name@example.com.");
+    setFieldError(phoneIn, phoneOk ? "" : "Check the phone number, or leave it empty.");
+    setFieldError(agreeIn, agreeIn.checked ? "" : "Tick the box to confirm you've read how custom orders work.");
+    if (!kind) return $("input[name=kind]", customForm).focus();
+    if (!qty) return $("input[name=qty]", customForm).focus();
+    if (!ideaOk) return ideaIn.focus();
+    if (!nameOk) return nameIn.focus();
+    if (!emailOk) return emailIn.focus();
+    if (!phoneOk) return phoneIn.focus();
+    if (!agreeIn.checked) return agreeIn.focus();
+    if ($("input[name=botcheck]", customForm).checked) return;
+
+    const no = `C-${newSheetNo()}`;
+    const name = nameIn.value.trim();
+    const email = emailIn.value.trim();
+    const phone = phoneIn.value.trim();
+    const when = $("#custom-when").value.trim();
+    const budget = $("#custom-budget").value.trim();
+    const link = $("#custom-link").value.trim();
+    const idea = ideaIn.value.trim();
+    const text = [
+      `Custom request No. ${no}`,
+      `From: ${name}`,
+      `Email: ${email}`,
+      ...(phone ? [`Phone: ${phone}`] : []),
+      "",
+      `Kind: ${kind.value}`,
+      `How many: ${qty.value}`,
+      ...(when ? [`Needed by: ${when}`] : []),
+      ...(budget ? [`Budget: ${budget}`] : []),
+      ...(link ? [`Reference: ${link}`] : []),
+      "",
+      "What they'd like:",
+      idea,
+      "",
+      "They confirmed they've read the custom order terms, including the deposit.",
+    ].join("\n");
+
+    const send = $("[data-custom-send]");
+    send.disabled = true;
+    send.textContent = "Sending…";
+    try {
+      await submitToOwner({
+        subject: `Custom request No. ${no} from ${name} (${kind.value}, ${qty.value})`,
+        name,
+        email,
+        ...(phone ? { phone } : {}),
+        kind: kind.value,
+        quantity: qty.value,
+        request: text,
+      });
+      $("[data-custom-done-title]").textContent = `Request No. ${no} sent`;
+      $("[data-custom-done-text]").textContent = `Thanks, ${name}. The maker will contact you at ${email}${phone ? ` or ${phone}` : ""} to talk it through. Nothing has been charged and nothing is booked yet.`;
+      customForm.reset();
+      $("[data-custom-hint]").textContent = CUSTOM_HINT;
+      customForm.hidden = true;
+      const done = $("[data-custom-done]");
+      done.hidden = false;
+      done.focus({ preventScroll: true });
+      done.scrollIntoView({ block: "nearest", behavior: reduceMotion() ? "auto" : "smooth" });
+      announce(`Custom request No. ${no} sent.`);
+    } catch (err) {
+      status.className = "form-status is-error";
+      status.textContent = failureMessage(err).replace(" Your sheet is saved on this device.", "");
+    } finally {
+      send.disabled = false;
+      send.textContent = "Send request";
+    }
+  });
+  $("[data-custom-again]").addEventListener("click", () => {
+    $("[data-custom-done]").hidden = true;
+    customForm.hidden = false;
+    const first = $("input[name=kind]", customForm);
+    if (first) first.focus();
+  });
+
   /* ---------- updates ---------- */
   function renderUpdates() {
     const list = $("[data-updates]");
@@ -720,6 +875,7 @@
     renderFeature();
     renderCatalogue();
     renderUpdates();
+    renderCustom();
     renderSheet(false);
   }
   boot();

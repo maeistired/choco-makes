@@ -20,6 +20,7 @@
       <nav aria-label="Main">
         <ul class="nav">
           <li><a href="#shop">Shop</a></li>
+          <li><a href="#custom">Custom</a></li>
           <li><a href="#updates">Updates</a></li>
           <li><a href="#about">About</a></li>
         </ul>
@@ -49,6 +50,93 @@
       </div>
       <div data-catalogue>
         <p class="status-note">Loading the shop…</p>
+      </div>
+    </section>
+
+    <section class="custom wrap" id="custom" aria-labelledby="custom-title">
+      <div class="section-head">
+        <h2 id="custom-title">Custom orders</h2>
+        <p class="section-head__note">Want something made just for you? Tell the maker the idea. You'll get a reply to talk it through before anything is agreed.</p>
+      </div>
+      <div class="custom__grid">
+        <div class="custom__terms">
+          <h3 class="custom__subhead">How custom orders work</h3>
+          <ol class="terms" data-custom-terms></ol>
+        </div>
+
+        <div class="custom__panel">
+          <p class="custom__closed" data-custom-closed hidden></p>
+          <form class="custom__form" data-custom-form novalidate hidden>
+            <fieldset class="choice" aria-describedby="custom-kind-error">
+              <legend class="choice__legend">What kind of custom piece?</legend>
+              <div class="choice__options choice__options--cards" data-custom-kinds></div>
+              <p class="field__error" id="custom-kind-error" hidden></p>
+            </fieldset>
+            <fieldset class="choice" aria-describedby="custom-qty-error">
+              <legend class="choice__legend">How many?</legend>
+              <div class="choice__options" data-custom-qty></div>
+              <p class="field__error" id="custom-qty-error" hidden></p>
+            </fieldset>
+            <div class="field">
+              <label for="custom-idea">Describe what you'd like</label>
+              <textarea id="custom-idea" name="idea" rows="5" maxlength="2000" required aria-describedby="custom-idea-hint"></textarea>
+              <p class="field__hint" id="custom-idea-hint" data-custom-hint>Pick a kind above for tips on what to include. Rough ideas are fine.</p>
+              <p class="field__error" id="custom-idea-error" hidden></p>
+            </div>
+            <div class="custom__row">
+              <div class="field">
+                <label for="custom-when">Needed by <span class="field__optional">(optional)</span></label>
+                <input id="custom-when" name="when" aria-describedby="custom-when-hint">
+                <p class="field__hint" id="custom-when-hint">A date, or "no rush".</p>
+              </div>
+              <div class="field">
+                <label for="custom-budget">Budget <span class="field__optional">(optional)</span></label>
+                <input id="custom-budget" name="budget" aria-describedby="custom-budget-hint">
+                <p class="field__hint" id="custom-budget-hint">A rough range in CAD helps.</p>
+              </div>
+            </div>
+            <div class="field">
+              <label for="custom-link">Link to a picture or file <span class="field__optional">(optional)</span></label>
+              <input id="custom-link" name="link" inputmode="url" autocomplete="url" aria-describedby="custom-link-hint">
+              <p class="field__hint" id="custom-link-hint">Google Drive, Pinterest, Printables and so on. You can also send pictures when the maker replies.</p>
+            </div>
+            <div class="custom__row">
+              <div class="field">
+                <label for="custom-name">Your name</label>
+                <input id="custom-name" name="name" autocomplete="name" required>
+                <p class="field__error" id="custom-name-error" hidden></p>
+              </div>
+              <div class="field">
+                <label for="custom-email">Email</label>
+                <input id="custom-email" name="email" type="email" autocomplete="email" required aria-describedby="custom-email-hint">
+                <p class="field__hint" id="custom-email-hint">So the maker can contact you.</p>
+                <p class="field__error" id="custom-email-error" hidden></p>
+              </div>
+            </div>
+            <div class="field">
+              <label for="custom-phone">Phone <span class="field__optional">(optional)</span></label>
+              <input id="custom-phone" name="phone" type="tel" autocomplete="tel" aria-describedby="custom-phone-hint">
+              <p class="field__hint" id="custom-phone-hint">If you'd rather get a text or a call.</p>
+              <p class="field__error" id="custom-phone-error" hidden></p>
+            </div>
+            <div class="check">
+              <input id="custom-agree" name="agree" type="checkbox" required>
+              <label for="custom-agree">I've read how custom orders work, including the deposit, and understand this is a request, not an order.</label>
+            </div>
+            <p class="field__error" id="custom-agree-error" hidden></p>
+            <input class="honeypot" type="checkbox" name="botcheck" tabindex="-1" autocomplete="off" aria-hidden="true">
+            <div class="custom__actions">
+              <button class="button" type="submit" data-custom-send>Send request</button>
+              <p class="custom__fine">Nothing is charged and nothing is booked yet.</p>
+            </div>
+            <p class="form-status" role="status" aria-live="polite" data-custom-status></p>
+          </form>
+          <div class="custom__done" data-custom-done hidden tabindex="-1">
+            <h3 class="custom__subhead" data-custom-done-title></h3>
+            <p data-custom-done-text></p>
+            <button class="button button--small button--quiet" type="button" data-custom-again>Send another request</button>
+          </div>
+        </div>
       </div>
     </section>
 
