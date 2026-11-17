@@ -156,6 +156,19 @@ html { scrollbar-color: var(--cloth-lilac) var(--paper); }
 .feature__label { position: absolute; left: var(--s5); bottom: var(--s5); max-width: calc(100% - 2 * var(--s5)); }
 .feature__label a { text-decoration: none; }
 .feature__label a:hover .label__name { text-decoration: underline; text-decoration-thickness: 1px; }
+/* over a photo the label drops its paper and sits on a soft ink shade instead */
+.feature:has(.feature__media img)::after {
+  content: ""; position: absolute; inset: 0; pointer-events: none;
+  background: linear-gradient(to top, rgba(37, 35, 44, 0.72) 0%, rgba(37, 35, 44, 0.32) 28%, rgba(37, 35, 44, 0) 52%);
+}
+.feature:has(.feature__media img) .feature__label {
+  z-index: 1; left: var(--s5); right: var(--s5); bottom: var(--s4);
+  background: none; box-shadow: none; padding: 0; color: var(--paper);
+}
+.feature:has(.feature__media img) .feature__label a { display: inline-block; }
+.feature:has(.feature__media img) .feature__label a:focus-visible { outline-color: var(--paper); }
+.feature:has(.feature__media img) .label__name { text-shadow: 0 1px 12px rgba(37, 35, 44, 0.35); text-underline-offset: 4px; }
+.feature:has(.feature__media img) .label__meta { margin-top: 2px; font-weight: 500; color: rgba(245, 244, 247, 0.9); }
 
 /* placeholder object drawn on the cloth when no photo exists */
 .ph-object {
@@ -209,19 +222,34 @@ html { scrollbar-color: var(--cloth-lilac) var(--paper); }
 .carousel__btn:disabled { opacity: 0; pointer-events: none; }
 .carousel__count {
   position: absolute; z-index: 2; right: var(--s3); bottom: var(--s3);
-  background: var(--sheet); padding: 2px var(--s2); font-size: 0.75rem; font-weight: 600; font-variant-numeric: tabular-nums;
+  color: var(--paper); font-size: 0.75rem; font-weight: 600; font-variant-numeric: tabular-nums;
+  text-shadow: 0 1px 8px rgba(37, 35, 44, 0.5);
 }
 @media (hover: hover) {
   .carousel__btn { opacity: 0; }
   .carousel:hover .carousel__btn:not(:disabled), .carousel:focus-within .carousel__btn:not(:disabled) { opacity: 1; }
 }
-.product__tags { position: absolute; top: var(--s3); left: var(--s3); right: var(--s3); z-index: 1; display: flex; justify-content: space-between; gap: var(--s2); pointer-events: none; }
+.product__tags { position: absolute; top: var(--s3); left: var(--s3); right: var(--s3); z-index: 2; display: flex; justify-content: space-between; gap: var(--s2); pointer-events: none; }
 .product__tag {
   background: var(--sheet); padding: 2px var(--s2); font-size: 0.75rem; font-weight: 600; letter-spacing: 0.02em;
 }
 .product.is-soldout .ph-object { color: transparent; }
-.product.is-soldout .product__cloth::after { content: ""; position: absolute; inset: 0; pointer-events: none; background: rgba(245, 244, 247, 0.5); }
-.product__gone { position: absolute; z-index: 1; left: 50%; top: 50%; transform: translate(-50%, -50%); font: 400 1.25rem/1 var(--serif); white-space: nowrap; pointer-events: none; }
+.product.is-soldout .product__cloth::after { content: ""; position: absolute; inset: 0; z-index: 1; pointer-events: none; background: rgba(245, 244, 247, 0.5); }
+.product__gone { position: absolute; z-index: 2; left: 50%; top: 50%; transform: translate(-50%, -50%); font: 400 1.25rem/1 var(--serif); white-space: nowrap; pointer-events: none; }
+/* while a photo shows, tags and the photo count are light type on a soft ink shade, not white boxes */
+.product__cloth:has(.carousel__track:not([hidden]))::before {
+  content: ""; position: absolute; inset: 0; z-index: 1; pointer-events: none;
+  background: linear-gradient(to bottom, rgba(37, 35, 44, 0.62) 0%, rgba(37, 35, 44, 0.5) 16%, rgba(37, 35, 44, 0) 42%);
+}
+.product__cloth:has(.carousel__count:not([hidden]))::before {
+  background:
+    linear-gradient(to bottom, rgba(37, 35, 44, 0.62) 0%, rgba(37, 35, 44, 0.5) 16%, rgba(37, 35, 44, 0) 42%),
+    linear-gradient(to top, rgba(37, 35, 44, 0.62) 0%, rgba(37, 35, 44, 0.5) 14%, rgba(37, 35, 44, 0) 36%);
+}
+.product__cloth:has(.carousel__track:not([hidden])) .product__tag {
+  background: none; padding: 0; color: var(--paper);
+  text-shadow: 0 1px 8px rgba(37, 35, 44, 0.5);
+}
 
 .product__body { display: flex; flex-direction: column; flex: 1; padding-top: var(--s4); }
 .product__name { font: 400 1.375rem/1.2 var(--serif); letter-spacing: -0.005em; }
