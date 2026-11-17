@@ -156,30 +156,67 @@
   }
 
   /* ---------- catalogue ---------- */
-  /* The selected variant's own photo; otherwise the product's photo, unless
-     that is just another variant's photo (then show the placeholder). */
-  function photoOf(p, variant) {
-    const v = variant && hasVariants(p) ? p.variants.find((x) => x.name === variant) : null;
-    if (v && v.photo) return { src: v.photo, alt: `${p.name}, ${v.name}` };
-    if (v && p.photoIsVariant) return null;
-    return p.photo ? { src: p.photo, alt: p.photoAlt || p.name } : null;
+  const placeholder = (p, wide) => {
+    const isClicker = /click/i.test(p.category || "");
+    return el("div", { class: "ph-object" + (isClicker && !wide ? " ph-object--wide" : ""), text: "Photo coming soon" });
+  };
+  const reduceMotion = () => window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+
+  /* Product photos: a swipeable carousel when there's more than one. */
+  function renderPhoto(target, p, wide) {
+    target.textContent = "";
+    const photos = p.photos && p.photos.length ? p.photos : p.photo ? [{ src: p.photo, alt: p.photoAlt || p.name }] : [];
+    if (!photos.length) { target.append(placeholder(p, wide)); return; }
+    const slides = photos.map((ph, i) => el("div", { class: "carousel__slide", role: "group", "aria-roledescription": "slide", "aria-label": `${i + 1} of ${photos.length}` },
+      el("img", { src: ph.src, alt: ph.alt, loading: "lazy", decoding: "async", draggable: "false" })));
+    const track = el("div", { class: "carousel__track" }, ...slides);
+    const ph = placeholder(p, wide);
+    ph.hidden = true;
+    const box = el("div", { class: "carousel", role: "region", "aria-roledescription": "carousel", "aria-label": `Photos of ${p.name}` }, track, ph);
+    target.append(box);
+    if (photos.length < 2) return;
+
+    track.tabIndex = 0;
+    const prev = el("button", { class: "carousel__btn carousel__btn--prev", type: "button", "aria-label": "Previous photo" });
+    const next = el("button", { class: "carousel__btn carousel__btn--next", type: "button", "aria-label": "Next photo" });
+    prev.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M15 5l-7 7 7 7"/></svg>';
+    next.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9 5l7 7-7 7"/></svg>';
+    const count = el("span", { class: "carousel__count", "aria-hidden": "true" });
+    box.append(prev, next, count);
+
+    const current = () => Math.round(track.scrollLeft / Math.max(1, track.clientWidth));
+    const update = () => {
+      const i = Math.min(photos.length - 1, current());
+      count.textContent = `${i + 1} / ${photos.length}`;
+      prev.disabled = i === 0;
+      next.disabled = i === photos.length - 1;
+    };
+    const goTo = (i) => {
+      i = Math.max(0, Math.min(photos.length - 1, i));
+      track.scrollTo({ left: slides[i].offsetLeft, behavior: reduceMotion() ? "auto" : "smooth" });
+    };
+    prev.addEventListener("click", () => goTo(current() - 1));
+    next.addEventListener("click", () => goTo(current() + 1));
+    let raf = 0;
+    track.addEventListener("scroll", () => { cancelAnimationFrame(raf); raf = requestAnimationFrame(update); }, { passive: true });
+    update();
+    box._show = (variant) => {
+      const i = photos.findIndex((x) => x.variant === variant);
+      const v = hasVariants(p) ? p.variants.find((x) => x.name === variant) : null;
+      const noPhoto = i < 0 && v && p.photoIsVariant;
+      ph.hidden = !noPhoto;
+      track.hidden = prev.hidden = next.hidden = count.hidden = noPhoto;
+      if (i >= 0) goTo(i);
+    };
   }
 
-  function renderPhoto(target, p, wide, variant) {
-    const ph = photoOf(p, variant);
-    const img = target.querySelector("img");
-    if (ph && img) {
-      if (img.getAttribute("src") !== ph.src) img.src = ph.src;
-      img.alt = ph.alt;
-      return;
-    }
-    target.textContent = "";
-    if (ph) {
-      target.append(el("img", { src: ph.src, alt: ph.alt, loading: "lazy", decoding: "async" }));
-    } else {
-      const isClicker = /click/i.test(p.category || "");
-      target.append(el("div", { class: "ph-object" + (isClicker && !wide ? " ph-object--wide" : ""), text: "Photo coming soon" }));
-    }
+  /* When a colour is picked, jump to its photo (or show "coming soon"). */
+  function showVariantPhoto(node, p, variant) {
+    if (node.dataset.photoVariant === (variant || "")) return;
+    const first = node.dataset.photoVariant === undefined;
+    node.dataset.photoVariant = variant || "";
+    const box = $("[data-media] .carousel", node);
+    if (box && box._show && !first) box._show(variant);
   }
 
   function renderFeature() {
@@ -189,14 +226,22 @@
     if (!p) { fig.hidden = true; return; }
     fig.className = `feature cloth cloth--${p.cloth || "lilac"}`;
     const media = $("[data-feature-media]");
-    if (p.photo) renderPhoto(media, p, true); else media.textContent = "";
-    const left = totalStock(p);
+    media.textContent = "";
+    const header = shop.settings && shop.settings.headerPhoto;
+    if (header) media.append(el("img", { src: header, alt: "Stitched spines of handmade notepads, fanned out on a desk", decoding: "async" }));
+    else if (p.photo) media.append(el("img", { src: p.photo, alt: p.photoAlt || p.name, decoding: "async" }));
+    /* The header photo is a group shot, so the label covers the featured
+       item's whole category (e.g. every notepad) rather than one product. */
+    const range = header ? shop.products.filter((x) => x.category === p.category) : [p];
+    const left = range.reduce((a, x) => a + totalStock(x), 0);
+    const low = Math.min(...range.map((x) => x.price));
+    const price = range.some((x) => x.price !== low) ? `from ${formatMoney(low)}` : formatMoney(low);
     label.textContent = "";
     label.append(
-      el("a", { href: `#p-${p.id}` },
-        el("span", { class: "label__name", text: p.name }),
-        el("span", { class: "label__meta", text: `${formatMoney(p.price)}${p.bundle ? ` · ${dealText(p)}` : ""} · ${stockWord(left)}` }),
-        p.photo ? null : el("span", { class: "label__meta", text: "Photo coming soon" })
+      el("a", { href: `#p-${range[0].id}` },
+        el("span", { class: "label__name", text: range.length > 1 ? p.category : p.name }),
+        el("span", { class: "label__meta", text: `${price}${p.bundle ? ` · ${dealText(p)}` : ""} · ${stockWord(left)}` }),
+        p.photo || header ? null : el("span", { class: "label__meta", text: "Photo coming soon" })
       )
     );
   }
@@ -304,7 +349,7 @@
   /* Reflect stock vs. what's already on the sheet for one card. */
   function syncProduct(node, p) {
     const variant = selectedVariant(node, p);
-    renderPhoto($("[data-media]", node), p, false, variant);
+    showVariantPhoto(node, p, variant);
     const stock = stockOf(p, variant);
     const onSheet = (findLine(p.id, variant) || { qty: 0 }).qty;
     const remaining = stock - onSheet;

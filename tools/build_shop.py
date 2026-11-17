@@ -10,8 +10,10 @@ Edit these (Numbers, Excel or Google Sheets → export as CSV):
 
 Photos: drop originals in photos/ named after the product id
 (e.g. photos/lilac-dot-notebook.jpg, .png or .heic). For a colour or other
-variant, add the variant name: photos/grid-notepad-purple.heic. They're
-resized into assets/img/products/ automatically. Settings stay in data/shop.json.
+variant, add the variant name: photos/grid-notepad-purple.heic. More shots
+of one product: photos/<id>-2.heic, -3 ... Shots shared by a whole deal group:
+photos/notepads-1.heic, -2 ... The photo at the top of the page: photos/header.heic.
+All are resized into assets/img/products/ automatically. Settings stay in data/shop.json.
 """
 import csv
 import json
@@ -203,29 +205,66 @@ def photo_for(stem, label, write, used):
     return None
 
 
-def attach_photos(products, write):
-    """Main photo: photos/<id>.*  Colour/variant photo: photos/<id>-<variant>.*
-    (e.g. photos/grid-notepad-purple.heic). A product with no main photo uses
-    its first variant photo; a variant with no photo of its own falls back to
-    the main photo only when that is a general shot of the product."""
+def numbered(prefix):
+    """n for every photos/<prefix>-<n>.* (or an already-resized copy), sorted."""
+    pat = re.compile(rf"^{re.escape(prefix)}-(\d+)$", re.I)
+    found = set()
+    for d, exts in ((PHOTO_IN, PHOTO_EXTS), (PHOTO_OUT, (".jpg",))):
+        if d.exists():
+            for f in d.iterdir():
+                m = pat.match(f.stem)
+                if m and f.suffix.lower() in exts:
+                    found.add(int(m.group(1)))
+    return sorted(found)
+
+
+def attach_photos(shop, products, write):
+    """Each product gets a carousel ("photos"), in this order:
+         photos/<id>.*              main photo
+         photos/<id>-2.*, -3.* ...  more photos of the product
+         photos/<id>-<variant>.*    one per colour/variant (e.g. grid-notepad-purple.heic)
+         photos/<deal_group>-1.* .. shots shared by every product in that deal group
+                                    (e.g. notepads-1.heic shows on every notepad)
+       photos/header.* replaces the photo at the top of the page."""
     used = set()
     for p in products:
+        gallery = []
         own = photo_for(p["id"], p["name"], write, used)
-        first_variant = None
+        if own:
+            gallery.append({"src": own, "alt": p["name"]})
+        for n in numbered(p["id"]):
+            src = photo_for(f"{p['id']}-{n}", f"{p['name']} ({n})", write, used)
+            if src:
+                gallery.append({"src": src, "alt": f"{p['name']}, photo {n}"})
+        has_variant_photo = False
         for v in p.get("variants", []):
-            vp = photo_for(f"{p['id']}-{slug(v['name'])}", f"{p['name']}, {v['name']}", write, used)
+            stem = f"{p['id']}-{slug(v['name'])}"
+            vp = photo_for(stem, f"{p['name']}, {v['name']}", write, used)
             if vp:
                 v["photo"] = vp
-                first_variant = first_variant or vp
+                has_variant_photo = True
+                gallery.append({"src": vp, "alt": f"{p['name']}, {v['name']}", "variant": v["name"]})
             elif not own:
-                notes.append(f"No photo yet for '{p['name']}, {v['name']}' (add photos/{p['id']}-{slug(v['name'])}.jpg)")
-        if own or first_variant:
-            p["photo"] = own or first_variant
-            p["photoAlt"] = p["name"]
-            if not own:
+                notes.append(f"No photo yet for '{p['name']}, {v['name']}' (add photos/{stem}.jpg)")
+        group = p.get("bundle", {}).get("group")
+        if group:
+            for n in numbered(group):
+                src = photo_for(f"{group}-{n}", f"{group} group shot {n}", write, used)
+                if src:
+                    gallery.append({"src": src, "alt": f"A group of {group}"})
+        if gallery:
+            p["photo"] = gallery[0]["src"]
+            p["photoAlt"] = gallery[0]["alt"]
+            p["photos"] = gallery
+            if not own and has_variant_photo:
                 p["photoIsVariant"] = True
         else:
             notes.append(f"No photo yet for '{p['name']}' (add photos/{p['id']}.jpg)")
+    header = photo_for("header", "the header", write, used)
+    if header:
+        shop["settings"]["headerPhoto"] = header
+    else:
+        shop["settings"].pop("headerPhoto", None)
     if write and PHOTO_OUT.exists():
         for old in PHOTO_OUT.glob("*.jpg"):
             if old.name not in used:
@@ -239,7 +278,7 @@ def main():
     products, categories = build_products()
     updates = build_updates()
     if not errors:
-        attach_photos(products, write)
+        attach_photos(shop, products, write)
 
     for n in notes:
         print(f"  note: {n}")

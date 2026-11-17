@@ -4,7 +4,8 @@
     "locale": "en-CA",
     "web3formsAccessKey": "1cf9024c-fffb-4479-85a0-e53346d4c370",
     "lowStockAt": 5,
-    "orderConfirmation": "Thank you for your order! It's on its way to Choco Makes, and you'll get a reply by email soon to confirm your items and arrange a time for pickup on campus. You can pay by e-Transfer, contactless at pickup, or cash (exact change is appreciated, as change can't be guaranteed). Nothing has been charged yet."
+    "orderConfirmation": "Thank you for your order! It's on its way to Choco Makes, and you'll get a reply by email soon to confirm your items and arrange a time for pickup on campus. You can pay by e-Transfer, contactless at pickup, or cash (exact change is appreciated, as change can't be guaranteed). Nothing has been charged yet.",
+    "headerPhoto": "assets/img/products/header.jpg"
   },
   "categories": [
     "Handmade sketchbooks",
@@ -25,7 +26,6 @@
       "section": "Handmade paper goods",
       "photo": "assets/img/products/landscape-sketchbook.jpg",
       "cloth": "lilac",
-      "featured": true,
       "variantLabel": "Paper",
       "variants": [
         {
@@ -39,7 +39,27 @@
           "photo": "assets/img/products/landscape-sketchbook-white.jpg"
         }
       ],
-      "photoAlt": "Landscape sketchbook"
+      "photoAlt": "Landscape sketchbook",
+      "photos": [
+        {
+          "src": "assets/img/products/landscape-sketchbook.jpg",
+          "alt": "Landscape sketchbook"
+        },
+        {
+          "src": "assets/img/products/landscape-sketchbook-2.jpg",
+          "alt": "Landscape sketchbook, photo 2"
+        },
+        {
+          "src": "assets/img/products/landscape-sketchbook-cream.jpg",
+          "alt": "Landscape sketchbook, Cream",
+          "variant": "Cream"
+        },
+        {
+          "src": "assets/img/products/landscape-sketchbook-white.jpg",
+          "alt": "Landscape sketchbook, White",
+          "variant": "White"
+        }
+      ]
     },
     {
       "id": "portrait-sketchbook",
@@ -55,7 +75,21 @@
       "photo": "assets/img/products/portrait-sketchbook.jpg",
       "cloth": "pink",
       "stock": 8,
-      "photoAlt": "Portrait sketchbook"
+      "photoAlt": "Portrait sketchbook",
+      "photos": [
+        {
+          "src": "assets/img/products/portrait-sketchbook.jpg",
+          "alt": "Portrait sketchbook"
+        },
+        {
+          "src": "assets/img/products/portrait-sketchbook-2.jpg",
+          "alt": "Portrait sketchbook, photo 2"
+        },
+        {
+          "src": "assets/img/products/portrait-sketchbook-3.jpg",
+          "alt": "Portrait sketchbook, photo 3"
+        }
+      ]
     },
     {
       "id": "grid-notepad",
@@ -70,6 +104,7 @@
       "section": "Handmade paper goods",
       "photo": "assets/img/products/grid-notepad-grey.jpg",
       "cloth": "stone",
+      "featured": true,
       "variantLabel": "Colour",
       "variants": [
         {
@@ -83,7 +118,31 @@
           "photo": "assets/img/products/grid-notepad-purple.jpg"
         }
       ],
-      "photoAlt": "Grid notepad",
+      "photoAlt": "Grid notepad, Grey",
+      "photos": [
+        {
+          "src": "assets/img/products/grid-notepad-grey.jpg",
+          "alt": "Grid notepad, Grey",
+          "variant": "Grey"
+        },
+        {
+          "src": "assets/img/products/grid-notepad-purple.jpg",
+          "alt": "Grid notepad, Purple",
+          "variant": "Purple"
+        },
+        {
+          "src": "assets/img/products/notepads-1.jpg",
+          "alt": "A group of notepads"
+        },
+        {
+          "src": "assets/img/products/notepads-2.jpg",
+          "alt": "A group of notepads"
+        },
+        {
+          "src": "assets/img/products/notepads-3.jpg",
+          "alt": "A group of notepads"
+        }
+      ],
       "photoIsVariant": true
     },
     {
@@ -112,7 +171,31 @@
           "photo": "assets/img/products/lined-notepad-purple.jpg"
         }
       ],
-      "photoAlt": "Lined notepad",
+      "photoAlt": "Lined notepad, Grey",
+      "photos": [
+        {
+          "src": "assets/img/products/lined-notepad-grey.jpg",
+          "alt": "Lined notepad, Grey",
+          "variant": "Grey"
+        },
+        {
+          "src": "assets/img/products/lined-notepad-purple.jpg",
+          "alt": "Lined notepad, Purple",
+          "variant": "Purple"
+        },
+        {
+          "src": "assets/img/products/notepads-1.jpg",
+          "alt": "A group of notepads"
+        },
+        {
+          "src": "assets/img/products/notepads-2.jpg",
+          "alt": "A group of notepads"
+        },
+        {
+          "src": "assets/img/products/notepads-3.jpg",
+          "alt": "A group of notepads"
+        }
+      ],
       "photoIsVariant": true
     },
     {
@@ -135,32 +218,56 @@
           "stock": 8
         }
       ],
-      "photoAlt": "Plain notepad"
+      "photoAlt": "Plain notepad",
+      "photos": [
+        {
+          "src": "assets/img/products/plain-notepad.jpg",
+          "alt": "Plain notepad"
+        },
+        {
+          "src": "assets/img/products/notepads-1.jpg",
+          "alt": "A group of notepads"
+        },
+        {
+          "src": "assets/img/products/notepads-2.jpg",
+          "alt": "A group of notepads"
+        },
+        {
+          "src": "assets/img/products/notepads-3.jpg",
+          "alt": "A group of notepads"
+        }
+      ]
     },
     {
       "id": "clicker-creeper",
       "name": "Clicker creeper",
       "category": "Fidgets",
-      "price": 7.5,
+      "price": 6.5,
       "bundle": {
         "qty": 2,
-        "price": 13,
+        "price": 12,
         "group": "fidgets"
       },
       "section": "3D-printed fidgets",
       "photo": "assets/img/products/clicker-creeper.jpg",
       "cloth": "blue",
       "stock": 15,
-      "photoAlt": "Clicker creeper"
+      "photoAlt": "Clicker creeper",
+      "photos": [
+        {
+          "src": "assets/img/products/clicker-creeper.jpg",
+          "alt": "Clicker creeper"
+        }
+      ]
     },
     {
       "id": "keycap-keychain",
       "name": "Keycap keychain",
       "category": "Fidgets",
-      "price": 7.5,
+      "price": 6.5,
       "bundle": {
         "qty": 2,
-        "price": 13,
+        "price": 12,
         "group": "fidgets"
       },
       "section": "3D-printed fidgets",
@@ -189,7 +296,24 @@
           "photo": "assets/img/products/keycap-keychain-black.jpg"
         }
       ],
-      "photoAlt": "Keycap keychain",
+      "photoAlt": "Keycap keychain, Water",
+      "photos": [
+        {
+          "src": "assets/img/products/keycap-keychain-water.jpg",
+          "alt": "Keycap keychain, Water",
+          "variant": "Water"
+        },
+        {
+          "src": "assets/img/products/keycap-keychain-pink.jpg",
+          "alt": "Keycap keychain, Pink",
+          "variant": "Pink"
+        },
+        {
+          "src": "assets/img/products/keycap-keychain-black.jpg",
+          "alt": "Keycap keychain, Black",
+          "variant": "Black"
+        }
+      ],
       "photoIsVariant": true
     }
   ],

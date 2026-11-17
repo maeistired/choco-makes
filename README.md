@@ -24,7 +24,7 @@ Your stock lives in two spreadsheets in **`inventory/`**. Open them in Numbers, 
 - **deal_group** (optional): products with the same deal group share one deal, so customers can mix and match. For example, with `fidgets` on both clickers, one creeper plus one key clicker is $13. Every product in a group needs the same bundle numbers. The site shows "any 2 fidgets for $13".
 - **stock**: a whole number. Customers never see the exact count, only a label: **In stock** (6 or more), **Low stock** (3 to 5), **1–2 left**, or **All gone for now** (0). To change where "Low stock" starts, edit `settings.lowStockAt` in `data/shop.json` (it's set to 5). `0` means sold out: the item stays visible, marked "All gone for now", with a button customers can use to be told when it's back.
 - **cloth**: the colour behind the item: `lilac`, `pink`, `blue` or `stone`.
-- **featured**: `yes` puts the item in the big panel at the top (one item only).
+- **featured**: `yes` puts the item in the big panel at the top (one item only). If there's a header photo (`photos/header.heic`), the panel shows that photo and is labelled with the featured item's whole category instead, e.g. "Handmade notepads".
 - **Row order** is the order on the page.
 
 ### 2. `inventory/updates.csv`: short dated notes
