@@ -30,12 +30,12 @@
       "variants": [
         {
           "name": "Cream",
-          "stock": 7,
+          "stock": 8,
           "photo": "assets/img/products/landscape-sketchbook-cream.jpg"
         },
         {
           "name": "White",
-          "stock": 10,
+          "stock": 8,
           "photo": "assets/img/products/landscape-sketchbook-white.jpg"
         }
       ],
@@ -54,7 +54,7 @@
       "section": "Handmade paper goods",
       "photo": "assets/img/products/portrait-sketchbook.jpg",
       "cloth": "pink",
-      "stock": 0,
+      "stock": 8,
       "photoAlt": "Portrait sketchbook"
     },
     {
@@ -74,12 +74,12 @@
       "variants": [
         {
           "name": "Grey",
-          "stock": 0,
+          "stock": 8,
           "photo": "assets/img/products/grid-notepad-grey.jpg"
         },
         {
           "name": "Purple",
-          "stock": 0,
+          "stock": 8,
           "photo": "assets/img/products/grid-notepad-purple.jpg"
         }
       ],
@@ -103,12 +103,12 @@
       "variants": [
         {
           "name": "Grey",
-          "stock": 0,
+          "stock": 8,
           "photo": "assets/img/products/lined-notepad-grey.jpg"
         },
         {
           "name": "Purple",
-          "stock": 0,
+          "stock": 8,
           "photo": "assets/img/products/lined-notepad-purple.jpg"
         }
       ],
@@ -132,7 +132,7 @@
       "variants": [
         {
           "name": "Purple",
-          "stock": 0
+          "stock": 8
         }
       ],
       "photoAlt": "Plain notepad"
