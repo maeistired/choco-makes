@@ -182,7 +182,8 @@ html { scrollbar-color: var(--cloth-lilac) var(--paper); }
 .grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(min(100%, 260px), 1fr)); gap: var(--s7) var(--s5); }
 
 .product { display: flex; flex-direction: column; scroll-margin-top: var(--s5); }
-.product__cloth { position: relative; aspect-ratio: 3 / 2; display: grid; place-items: center; overflow: hidden; }
+/* 16:9 matches the camera photos, so the paper goods show in full (4:3 shots lose only empty desk) */
+.product__cloth { position: relative; aspect-ratio: 16 / 9; display: grid; place-items: center; overflow: hidden; }
 .product__media { width: 100%; height: 100%; display: grid; place-items: center; }
 .product__media img { width: 100%; height: 100%; object-fit: cover; }
 .product__tags { position: absolute; top: var(--s3); left: var(--s3); right: var(--s3); z-index: 1; display: flex; justify-content: space-between; gap: var(--s2); pointer-events: none; }
@@ -415,7 +416,6 @@ html { scrollbar-color: var(--cloth-lilac) var(--paper); }
 /* ---------- responsive ---------- */
 /* wide but short screens: keep the first row's names and prices above the slip */
 @media (min-width: 961px) and (max-height: 940px) {
-  .product__cloth { aspect-ratio: 2 / 1; }
   .intro__lede { margin-top: var(--s3); font-size: clamp(1rem, 2.1vh, 1.125rem); }
   .intro h1 { font-size: clamp(2.125rem, min(3.2vw, 5vh), 3rem); }
   .intro .button { margin-top: var(--s4); }
@@ -439,7 +439,6 @@ html { scrollbar-color: var(--cloth-lilac) var(--paper); }
   .grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: var(--s6) var(--s4); }
   .product__name { font-size: 1.125rem; }
   .product__desc { display: none; }
-  .product__cloth { aspect-ratio: 4 / 3; }
   .product__actions .long { display: none; }
   .product__tag[data-category] { display: none; }
   .product__gone { font-size: 1rem; padding: var(--s2) var(--s3); }

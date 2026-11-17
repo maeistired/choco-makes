@@ -156,10 +156,26 @@
   }
 
   /* ---------- catalogue ---------- */
-  function renderPhoto(target, p, wide) {
+  /* The selected variant's own photo; otherwise the product's photo, unless
+     that is just another variant's photo (then show the placeholder). */
+  function photoOf(p, variant) {
+    const v = variant && hasVariants(p) ? p.variants.find((x) => x.name === variant) : null;
+    if (v && v.photo) return { src: v.photo, alt: `${p.name}, ${v.name}` };
+    if (v && p.photoIsVariant) return null;
+    return p.photo ? { src: p.photo, alt: p.photoAlt || p.name } : null;
+  }
+
+  function renderPhoto(target, p, wide, variant) {
+    const ph = photoOf(p, variant);
+    const img = target.querySelector("img");
+    if (ph && img) {
+      if (img.getAttribute("src") !== ph.src) img.src = ph.src;
+      img.alt = ph.alt;
+      return;
+    }
     target.textContent = "";
-    if (p.photo) {
-      target.append(el("img", { src: p.photo, alt: p.photoAlt || p.name, loading: "lazy", decoding: "async" }));
+    if (ph) {
+      target.append(el("img", { src: ph.src, alt: ph.alt, loading: "lazy", decoding: "async" }));
     } else {
       const isClicker = /click/i.test(p.category || "");
       target.append(el("div", { class: "ph-object" + (isClicker && !wide ? " ph-object--wide" : ""), text: "Photo coming soon" }));
@@ -288,6 +304,7 @@
   /* Reflect stock vs. what's already on the sheet for one card. */
   function syncProduct(node, p) {
     const variant = selectedVariant(node, p);
+    renderPhoto($("[data-media]", node), p, false, variant);
     const stock = stockOf(p, variant);
     const onSheet = (findLine(p.id, variant) || { qty: 0 }).qty;
     const remaining = stock - onSheet;

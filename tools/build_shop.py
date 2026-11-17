@@ -9,8 +9,9 @@ Edit these (Numbers, Excel or Google Sheets → export as CSV):
     inventory/updates.csv    date (YYYY-MM-DD), text
 
 Photos: drop originals in photos/ named after the product id
-(e.g. photos/lilac-dot-notebook.jpg, .png or .heic). They're resized
-into assets/img/products/ automatically. Settings stay in data/shop.json.
+(e.g. photos/lilac-dot-notebook.jpg, .png or .heic). For a colour or other
+variant, add the variant name: photos/grid-notepad-purple.heic. They're
+resized into assets/img/products/ automatically. Settings stay in data/shop.json.
 """
 import csv
 import json
@@ -185,22 +186,51 @@ def build_updates():
     return updates
 
 
+def photo_for(stem, label, write, used):
+    """Resize photos/<stem>.* into assets/img/products/<stem>.jpg; return its web path or None."""
+    src = next((PHOTO_IN / f"{stem}{ext}" for ext in PHOTO_EXTS
+                if (PHOTO_IN / f"{stem}{ext}").exists()), None)
+    out = PHOTO_OUT / f"{stem}.jpg"
+    if src and write and (not out.exists() or src.stat().st_mtime > out.stat().st_mtime):
+        PHOTO_OUT.mkdir(parents=True, exist_ok=True)
+        subprocess.run(["sips", "-s", "format", "jpeg", "-s", "formatOptions", "82",
+                        "-Z", "1600", str(src), "--out", str(out)],
+                       check=True, capture_output=True)
+        notes.append(f"Resized photo for '{label}'")
+    if out.exists() or (src and not write):
+        used.add(out.name)
+        return f"assets/img/products/{stem}.jpg"
+    return None
+
+
 def attach_photos(products, write):
+    """Main photo: photos/<id>.*  Colour/variant photo: photos/<id>-<variant>.*
+    (e.g. photos/grid-notepad-purple.heic). A product with no main photo uses
+    its first variant photo; a variant with no photo of its own falls back to
+    the main photo only when that is a general shot of the product."""
+    used = set()
     for p in products:
-        src = next((PHOTO_IN / f"{p['id']}{ext}" for ext in PHOTO_EXTS
-                    if (PHOTO_IN / f"{p['id']}{ext}").exists()), None)
-        out = PHOTO_OUT / f"{p['id']}.jpg"
-        if src and write and (not out.exists() or src.stat().st_mtime > out.stat().st_mtime):
-            PHOTO_OUT.mkdir(parents=True, exist_ok=True)
-            subprocess.run(["sips", "-s", "format", "jpeg", "-s", "formatOptions", "82",
-                            "-Z", "1600", str(src), "--out", str(out)],
-                           check=True, capture_output=True)
-            notes.append(f"Resized photo for '{p['name']}'")
-        if out.exists() or (src and not write):
-            p["photo"] = f"assets/img/products/{p['id']}.jpg"
+        own = photo_for(p["id"], p["name"], write, used)
+        first_variant = None
+        for v in p.get("variants", []):
+            vp = photo_for(f"{p['id']}-{slug(v['name'])}", f"{p['name']}, {v['name']}", write, used)
+            if vp:
+                v["photo"] = vp
+                first_variant = first_variant or vp
+            elif not own:
+                notes.append(f"No photo yet for '{p['name']}, {v['name']}' (add photos/{p['id']}-{slug(v['name'])}.jpg)")
+        if own or first_variant:
+            p["photo"] = own or first_variant
             p["photoAlt"] = p["name"]
+            if not own:
+                p["photoIsVariant"] = True
         else:
             notes.append(f"No photo yet for '{p['name']}' (add photos/{p['id']}.jpg)")
+    if write and PHOTO_OUT.exists():
+        for old in PHOTO_OUT.glob("*.jpg"):
+            if old.name not in used:
+                old.unlink()
+                notes.append(f"Removed unused photo {old.relative_to(ROOT)}")
 
 
 def main():

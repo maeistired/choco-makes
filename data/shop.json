@@ -30,11 +30,13 @@
       "variants": [
         {
           "name": "Cream",
-          "stock": 7
+          "stock": 7,
+          "photo": "assets/img/products/landscape-sketchbook-cream.jpg"
         },
         {
           "name": "White",
-          "stock": 10
+          "stock": 10,
+          "photo": "assets/img/products/landscape-sketchbook-white.jpg"
         }
       ],
       "photoAlt": "Landscape sketchbook"
@@ -66,20 +68,23 @@
         "group": "notepads"
       },
       "section": "Handmade paper goods",
-      "photo": "assets/img/products/grid-notepad.jpg",
+      "photo": "assets/img/products/grid-notepad-grey.jpg",
       "cloth": "stone",
       "variantLabel": "Colour",
       "variants": [
         {
           "name": "Grey",
-          "stock": 0
+          "stock": 0,
+          "photo": "assets/img/products/grid-notepad-grey.jpg"
         },
         {
           "name": "Purple",
-          "stock": 0
+          "stock": 0,
+          "photo": "assets/img/products/grid-notepad-purple.jpg"
         }
       ],
-      "photoAlt": "Grid notepad"
+      "photoAlt": "Grid notepad",
+      "photoIsVariant": true
     },
     {
       "id": "lined-notepad",
@@ -92,20 +97,23 @@
         "group": "notepads"
       },
       "section": "Handmade paper goods",
-      "photo": "assets/img/products/lined-notepad.jpg",
+      "photo": "assets/img/products/lined-notepad-grey.jpg",
       "cloth": "blue",
       "variantLabel": "Colour",
       "variants": [
         {
           "name": "Grey",
-          "stock": 0
+          "stock": 0,
+          "photo": "assets/img/products/lined-notepad-grey.jpg"
         },
         {
           "name": "Purple",
-          "stock": 0
+          "stock": 0,
+          "photo": "assets/img/products/lined-notepad-purple.jpg"
         }
       ],
-      "photoAlt": "Lined notepad"
+      "photoAlt": "Lined notepad",
+      "photoIsVariant": true
     },
     {
       "id": "plain-notepad",
@@ -156,14 +164,15 @@
         "group": "fidgets"
       },
       "section": "3D-printed fidgets",
-      "photo": "assets/img/products/keycap-keychain.jpg",
+      "photo": "assets/img/products/keycap-keychain-water.jpg",
       "cloth": "stone",
       "variantLabel": "Colour",
       "variantNote": "More colours coming soon",
       "variants": [
         {
           "name": "Water",
-          "stock": 9
+          "stock": 9,
+          "photo": "assets/img/products/keycap-keychain-water.jpg"
         },
         {
           "name": "Lilac",
@@ -171,14 +180,17 @@
         },
         {
           "name": "Pink",
-          "stock": 12
+          "stock": 12,
+          "photo": "assets/img/products/keycap-keychain-pink.jpg"
         },
         {
           "name": "Black",
-          "stock": 12
+          "stock": 12,
+          "photo": "assets/img/products/keycap-keychain-black.jpg"
         }
       ],
-      "photoAlt": "Keycap keychain"
+      "photoAlt": "Keycap keychain",
+      "photoIsVariant": true
     }
   ],
   "updates": []
