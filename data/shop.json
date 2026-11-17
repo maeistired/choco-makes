@@ -13,8 +13,8 @@
   ],
   "products": [
     {
-      "id": "sketchbook-5-5x5",
-      "name": "Sketchbook 5.5 × 5″",
+      "id": "landscape-sketchbook",
+      "name": "Landscape sketchbook",
       "category": "Handmade sketchbooks",
       "price": 10.5,
       "bundle": {
@@ -23,7 +23,7 @@
         "group": "sketchbooks"
       },
       "section": "Handmade paper goods",
-      "photo": "",
+      "photo": "assets/img/products/landscape-sketchbook.jpg",
       "cloth": "lilac",
       "featured": true,
       "variantLabel": "Paper",
@@ -36,11 +36,12 @@
           "name": "White",
           "stock": 10
         }
-      ]
+      ],
+      "photoAlt": "Landscape sketchbook"
     },
     {
-      "id": "sketchbook-4-5x5-5",
-      "name": "Sketchbook 4.5 × 5.5″",
+      "id": "portrait-sketchbook",
+      "name": "Portrait sketchbook",
       "category": "Handmade sketchbooks",
       "price": 10.5,
       "bundle": {
@@ -49,9 +50,10 @@
         "group": "sketchbooks"
       },
       "section": "Handmade paper goods",
-      "photo": "",
+      "photo": "assets/img/products/portrait-sketchbook.jpg",
       "cloth": "pink",
-      "stock": 0
+      "stock": 0,
+      "photoAlt": "Portrait sketchbook"
     },
     {
       "id": "grid-notepad",
@@ -64,7 +66,7 @@
         "group": "notepads"
       },
       "section": "Handmade paper goods",
-      "photo": "",
+      "photo": "assets/img/products/grid-notepad.jpg",
       "cloth": "stone",
       "variantLabel": "Colour",
       "variants": [
@@ -76,7 +78,8 @@
           "name": "Purple",
           "stock": 0
         }
-      ]
+      ],
+      "photoAlt": "Grid notepad"
     },
     {
       "id": "lined-notepad",
@@ -89,7 +92,7 @@
         "group": "notepads"
       },
       "section": "Handmade paper goods",
-      "photo": "",
+      "photo": "assets/img/products/lined-notepad.jpg",
       "cloth": "blue",
       "variantLabel": "Colour",
       "variants": [
@@ -101,7 +104,8 @@
           "name": "Purple",
           "stock": 0
         }
-      ]
+      ],
+      "photoAlt": "Lined notepad"
     },
     {
       "id": "plain-notepad",
@@ -114,7 +118,7 @@
         "group": "notepads"
       },
       "section": "Handmade paper goods",
-      "photo": "",
+      "photo": "assets/img/products/plain-notepad.jpg",
       "cloth": "lilac",
       "variantLabel": "Colour",
       "variants": [
@@ -122,7 +126,8 @@
           "name": "Purple",
           "stock": 0
         }
-      ]
+      ],
+      "photoAlt": "Plain notepad"
     },
     {
       "id": "clicker-creeper",
@@ -135,9 +140,10 @@
         "group": "fidgets"
       },
       "section": "3D-printed fidgets",
-      "photo": "",
+      "photo": "assets/img/products/clicker-creeper.jpg",
       "cloth": "blue",
-      "stock": 15
+      "stock": 15,
+      "photoAlt": "Clicker creeper"
     },
     {
       "id": "keycap-keychain",
@@ -150,7 +156,7 @@
         "group": "fidgets"
       },
       "section": "3D-printed fidgets",
-      "photo": "",
+      "photo": "assets/img/products/keycap-keychain.jpg",
       "cloth": "stone",
       "variantLabel": "Colour",
       "variantNote": "More colours coming soon",
@@ -171,7 +177,8 @@
           "name": "Black",
           "stock": 12
         }
-      ]
+      ],
+      "photoAlt": "Keycap keychain"
     }
   ],
   "updates": []

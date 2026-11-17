@@ -1,7 +1,7 @@
 id,name,category,section,price,bundle_qty,bundle_price,deal_group,cloth,featured,variant_label,variant,variant_note,stock,description
-sketchbook-5-5x5,Sketchbook 5.5 × 5″,Handmade sketchbooks,Handmade paper goods,10.50,2,18,sketchbooks,lilac,yes,Paper,Cream,,7,
-sketchbook-5-5x5,Sketchbook 5.5 × 5″,,,,,,,,,,White,,10,
-sketchbook-4-5x5-5,Sketchbook 4.5 × 5.5″,Handmade sketchbooks,Handmade paper goods,10.50,2,18,sketchbooks,pink,,,,,0,
+landscape-sketchbook,Landscape sketchbook,Handmade sketchbooks,Handmade paper goods,10.50,2,18,sketchbooks,lilac,yes,Paper,Cream,,7,
+landscape-sketchbook,Landscape sketchbook,,,,,,,,,,White,,10,
+portrait-sketchbook,Portrait sketchbook,Handmade sketchbooks,Handmade paper goods,10.50,2,18,sketchbooks,pink,,,,,0,
 grid-notepad,Grid notepad,Handmade notepads,Handmade paper goods,7.50,2,13,notepads,stone,,Colour,Grey,,0,
 grid-notepad,Grid notepad,,,,,,,,,,Purple,,0,
 lined-notepad,Lined notepad,Handmade notepads,Handmade paper goods,7.50,2,13,notepads,blue,,Colour,Grey,,0,

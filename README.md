@@ -10,8 +10,8 @@ Your stock lives in two spreadsheets in **`inventory/`**. Open them in Numbers, 
 
 | id | name | category | section | price | bundle_qty | bundle_price | deal_group | cloth | featured | variant_label | variant | variant_note | stock | description |
 |---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
-| sketchbook-5-5x5 | Sketchbook 5.5 × 5″ | Handmade sketchbooks | Handmade paper goods | 10.50 | 2 | 18 | sketchbooks | lilac | yes | Paper | Cream | | 7 | |
-| sketchbook-5-5x5 | Sketchbook 5.5 × 5″ | | | | | | | | | | White | | 10 | |
+| landscape-sketchbook | Landscape sketchbook | Handmade sketchbooks | Handmade paper goods | 10.50 | 2 | 18 | sketchbooks | lilac | yes | Paper | Cream | | 7 | |
+| landscape-sketchbook | Landscape sketchbook | | | | | | | | | | White | | 10 | |
 | grid-notepad | Grid notepad | Handmade notepads | Handmade paper goods | 7.50 | 2 | 13 | notepads | stone | | Colour | Grey | | 0 | |
 | clicker-creeper | Clicker creeper | Fidgets | 3D-printed fidgets | 7.50 | 2 | 13 | fidgets | blue | | | | | 15 | |
 
