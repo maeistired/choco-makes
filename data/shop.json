@@ -7,23 +7,26 @@
     "orderConfirmation": "Thank you for your order! It's on its way to Choco Makes, and you'll get a reply by email soon to confirm your items and arrange a time for pickup on campus. You can pay by e-Transfer, contactless at pickup, or cash (exact change is appreciated, as change can't be guaranteed). Nothing has been charged yet."
   },
   "categories": [
-    "Notebooks",
+    "Handmade sketchbooks",
+    "Handmade notepads",
     "Fidgets"
   ],
   "products": [
     {
-      "id": "handmade-notebook",
-      "name": "Handmade notebook",
-      "category": "Notebooks",
+      "id": "sketchbook-5-5x5",
+      "name": "Sketchbook 5.5 × 5″",
+      "category": "Handmade sketchbooks",
       "price": 10.5,
       "bundle": {
         "qty": 2,
-        "price": 18
+        "price": 18,
+        "group": "sketchbooks"
       },
+      "section": "Handmade paper goods",
       "photo": "",
       "cloth": "lilac",
       "featured": true,
-      "variantLabel": "Pages",
+      "variantLabel": "Paper",
       "variants": [
         {
           "name": "Cream",
@@ -32,6 +35,92 @@
         {
           "name": "White",
           "stock": 10
+        }
+      ]
+    },
+    {
+      "id": "sketchbook-4-5x5-5",
+      "name": "Sketchbook 4.5 × 5.5″",
+      "category": "Handmade sketchbooks",
+      "price": 10.5,
+      "bundle": {
+        "qty": 2,
+        "price": 18,
+        "group": "sketchbooks"
+      },
+      "section": "Handmade paper goods",
+      "photo": "",
+      "cloth": "pink",
+      "stock": 0
+    },
+    {
+      "id": "grid-notepad",
+      "name": "Grid notepad",
+      "category": "Handmade notepads",
+      "price": 7.5,
+      "bundle": {
+        "qty": 2,
+        "price": 13,
+        "group": "notepads"
+      },
+      "section": "Handmade paper goods",
+      "photo": "",
+      "cloth": "stone",
+      "variantLabel": "Colour",
+      "variants": [
+        {
+          "name": "Grey",
+          "stock": 0
+        },
+        {
+          "name": "Purple",
+          "stock": 0
+        }
+      ]
+    },
+    {
+      "id": "lined-notepad",
+      "name": "Lined notepad",
+      "category": "Handmade notepads",
+      "price": 7.5,
+      "bundle": {
+        "qty": 2,
+        "price": 13,
+        "group": "notepads"
+      },
+      "section": "Handmade paper goods",
+      "photo": "",
+      "cloth": "blue",
+      "variantLabel": "Colour",
+      "variants": [
+        {
+          "name": "Grey",
+          "stock": 0
+        },
+        {
+          "name": "Purple",
+          "stock": 0
+        }
+      ]
+    },
+    {
+      "id": "plain-notepad",
+      "name": "Plain notepad",
+      "category": "Handmade notepads",
+      "price": 7.5,
+      "bundle": {
+        "qty": 2,
+        "price": 13,
+        "group": "notepads"
+      },
+      "section": "Handmade paper goods",
+      "photo": "",
+      "cloth": "lilac",
+      "variantLabel": "Colour",
+      "variants": [
+        {
+          "name": "Purple",
+          "stock": 0
         }
       ]
     },
@@ -45,9 +134,10 @@
         "price": 13,
         "group": "fidgets"
       },
+      "section": "3D-printed fidgets",
       "photo": "",
       "cloth": "blue",
-      "stock": 20
+      "stock": 15
     },
     {
       "id": "keycap-keychain",
@@ -59,6 +149,7 @@
         "price": 13,
         "group": "fidgets"
       },
+      "section": "3D-printed fidgets",
       "photo": "",
       "cloth": "stone",
       "variantLabel": "Colour",
@@ -66,7 +157,7 @@
       "variants": [
         {
           "name": "Water",
-          "stock": 10
+          "stock": 9
         },
         {
           "name": "Lilac",

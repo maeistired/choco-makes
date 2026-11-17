@@ -118,6 +118,10 @@ def build_products():
                                       f"({bq} for ${bp}) differs from '{first[2]}' ({first[0]} for ${first[1]})")
             elif row.get("deal_group"):
                 errors.append(f"{where}: '{name}' has a deal_group but no bundle_qty/bundle_price")
+            if row.get("section"):
+                p["section"] = row["section"]
+            elif products and "section" in products[order[-1]]:
+                p["section"] = products[order[-1]]["section"]  # carries on from the row above
             if row.get("description"):
                 p["description"] = row["description"]
             p["photo"] = ""

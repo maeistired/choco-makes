@@ -196,7 +196,28 @@
       root.append(el("p", { class: "status-note", text: "Nothing listed right now. Check the updates below for the next batch." }));
       return;
     }
-    root.append(el("div", { class: "grid" }, ...list.map(renderProduct)));
+    /* Subsections (e.g. paper goods, fidgets) in the order they first appear. */
+    const sections = new Map();
+    for (const p of list) {
+      const key = p.section || "";
+      if (!sections.has(key)) sections.set(key, []);
+      sections.get(key).push(p);
+    }
+    if (sections.size === 1 && sections.has("")) {
+      root.append(el("div", { class: "grid" }, ...list.map(renderProduct)));
+      return;
+    }
+    let n = 0;
+    for (const [title, items] of sections) {
+      const headId = `section-${++n}`;
+      root.append(el("section", { class: "category", "aria-labelledby": headId },
+        el("div", { class: "category__head" },
+          el("h3", { id: headId, text: title || "More" }),
+          el("span", { class: "category__count", text: `${items.length} ${items.length === 1 ? "item" : "items"}` })
+        ),
+        el("div", { class: "grid" }, ...items.map(renderProduct))
+      ));
+    }
   }
 
   function renderProduct(p) {

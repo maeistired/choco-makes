@@ -8,15 +8,16 @@ Your stock lives in two spreadsheets in **`inventory/`**. Open them in Numbers, 
 
 ### 1. `inventory/products.csv`: one row per variant
 
-| id | name | category | price | bundle_qty | bundle_price | deal_group | cloth | featured | variant_label | variant | variant_note | stock | description |
-|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
-| handmade-notebook | Handmade notebook | Notebooks | 10.50 | 2 | 18 | | lilac | yes | Pages | Cream | | 7 | |
-| handmade-notebook | Handmade notebook | | | | | | | | | White | | 10 | |
-| clicker-creeper | Clicker creeper | Fidgets | 7.50 | 2 | 13 | fidgets | blue | | | | | 20 | |
-| keycap-keychain | Keycap keychain | Fidgets | 7.50 | 2 | 13 | fidgets | stone | | Colour | Water | More colours coming soon | 10 | |
+| id | name | category | section | price | bundle_qty | bundle_price | deal_group | cloth | featured | variant_label | variant | variant_note | stock | description |
+|---|---|---|---|---|---|---|---|---|---|---|---|---|---|---|
+| sketchbook-5-5x5 | Sketchbook 5.5 × 5″ | Handmade sketchbooks | Handmade paper goods | 10.50 | 2 | 18 | sketchbooks | lilac | yes | Paper | Cream | | 7 | |
+| sketchbook-5-5x5 | Sketchbook 5.5 × 5″ | | | | | | | | | | White | | 10 | |
+| grid-notepad | Grid notepad | Handmade notepads | Handmade paper goods | 7.50 | 2 | 13 | notepads | stone | | Colour | Grey | | 0 | |
+| clicker-creeper | Clicker creeper | Fidgets | 3D-printed fidgets | 7.50 | 2 | 13 | fidgets | blue | | | | | 15 | |
 
 - **A product with variants** (like cream or white pages) takes one row per variant, all with the same `id` and `name`. Fill in price, category and so on once, on the first row only. Each row has its own `stock`.
 - **A product with no variants** is one row with `variant` left empty.
+- **section**: the subsection of the shop the item sits under, with its own heading (e.g. `Handmade paper goods`, `3D-printed fidgets`). Fill it in on each product's first row. Sections appear in the order they first show up in the sheet.
 - **variant_note** (optional, first row only): a short line under the choices, e.g. `More colours coming soon`.
 - **id**: lowercase with dashes. Leave it blank and it's made from the name. Don't change it once people have ordered, because saved order sheets use it.
 - **price / bundle_price**: in CAD, `7.50` or `$7.50`. `bundle_qty` + `bundle_price` = "buy 2 for $13", counted across a product's variants.
