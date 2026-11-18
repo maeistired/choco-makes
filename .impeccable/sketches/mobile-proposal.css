@@ -1,0 +1,73 @@
+/* Mobile proposal (sketch, not shipped). Injected over assets/css/site.css for review.
+   Scope: phones (≤640px). Desktop is untouched. */
+
+@media (max-width: 640px) {
+
+  /* ---------- 1. First viewport: the product first, then the promise ---------- */
+  .masthead__inner { min-height: 0; padding-block: var(--s3) 0; }
+  .nav a { display: inline-flex; align-items: center; min-height: 44px; padding: 0; }
+
+  .intro { display: flex; flex-direction: column; gap: 0; padding: 0; }
+  .feature { order: -1; aspect-ratio: 16 / 9; max-height: none; }
+  .feature:has(.feature__media img) .feature__label { left: var(--gutter); right: var(--gutter); }
+  .intro__copy { padding: var(--s5) var(--gutter) 0; }
+  .intro h1 { font-size: 1.75rem; line-height: 1.1; letter-spacing: -0.015em; }
+  .intro__lede { margin-top: var(--s3); font-size: 1rem; }
+  .intro .button { display: none; }
+
+  /* Shelf of sections: one tap to the range you saw at the table */
+  .jump { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--s2); margin-top: var(--s5); }
+  .jump a {
+    display: grid; align-content: end; gap: 2px; min-height: 72px; padding: var(--s3);
+    background: var(--sheet); border: 1px solid var(--rule); border-top: 0; text-decoration: none;
+    position: relative;
+  }
+  .jump a::before { /* a strip of book cloth, like the spine of a bound sample */
+    content: ""; position: absolute; inset: 0 -1px auto -1px; height: 8px;
+    background: var(--c) url("/assets/img/linen.png") 0 0 / 240px 240px;
+  }
+  .jump a:active { border-color: var(--ink); }
+  .jump__name { font: 400 1.0625rem/1.15 var(--serif); }
+  .jump__meta { font-size: 0.8125rem; color: var(--ink-soft); font-variant-numeric: tabular-nums; }
+
+  /* ---------- 2. Shop: one product per row, photo-led ---------- */
+  .shop { padding-top: var(--s7); }
+  .category__head { margin: var(--s6) 0 var(--s4); }
+  .category { scroll-margin-top: var(--s4); }
+  .grid { grid-template-columns: 1fr; gap: var(--s7); }
+  .product__cloth { aspect-ratio: 3 / 2; }
+  .product__desc { display: block; }
+
+  .product__body { display: grid; grid-template-columns: 1fr auto; column-gap: var(--s4); align-content: start; }
+  .product__body > * { grid-column: 1 / -1; }
+  .product__name { grid-column: 1; font-size: 1.375rem; }
+  .product__price { grid-column: 2; grid-row: 1; margin-top: 0; font-size: 1.125rem; line-height: 1.6; }
+  .product__body > .bundle {
+    justify-self: start; margin-top: var(--s2);
+    padding: 2px var(--s2); border: 1px solid var(--rule); background: var(--sheet);
+    font-size: 0.8125rem; font-weight: 600; color: var(--ok);
+  }
+
+  /* touch-sized choices */
+  .variant span { min-height: 44px; padding: 0 var(--s4); font-size: 0.9375rem; }
+  .product__actions .button { min-height: 48px; font-size: 1rem; }
+
+  /* Add feedback where the thumb is, not only on the slip */
+  .button.is-added { background: var(--sheet); color: var(--ink); }
+  .button.is-added svg { width: 18px; height: 18px; fill: none; stroke: currentColor; stroke-width: 1.75; stroke-linecap: round; stroke-linejoin: round; }
+
+  /* Photos: swipe with a peek of the next shot; no round floating arrows */
+  .carousel__btn { display: none; }
+  .carousel__track { gap: var(--s1); }
+  .carousel__slide { flex-basis: calc(100% - 32px); }
+  .carousel__count {
+    color: var(--ink); text-shadow: none; background: var(--sheet);
+    padding: 2px var(--s2); right: var(--s3); bottom: var(--s3);
+  }
+  .product__cloth:has(.carousel__count:not([hidden]))::before {
+    background: linear-gradient(to bottom, rgba(37, 35, 44, 0.55) 0%, rgba(37, 35, 44, 0) 30%);
+  }
+
+  /* ---------- 3. Order sheet: thumb-sized controls ---------- */
+  .stepper button, .remove { width: 44px; height: 44px; }
+}
