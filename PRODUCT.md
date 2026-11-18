@@ -59,6 +59,10 @@ A small independent maker of handmade notebooks and 3D-printed clicker fidgets. 
 - Delivery or shipping. Not offered; undecided beyond on-campus pickup.
 - Domain name.
 
+**Planned for a separate session (owner, 2026-11-17):**
+- **Stack refactor.** The owner wants to revisit the plain HTML/CSS/JS stack: TypeScript, Tailwind, and libraries where they earn their place. Weigh before starting: GitHub Pages then needs a build step (e.g. a GitHub Action), the owner must still be able to update stock quickly via `inventory/*.csv` + `tools/build_shop.py`, and Tailwind must express the existing DESIGN.md tokens (paper/ink/cloth palette, square corners, linen cloth surfaces) rather than its defaults.
+- **Order slip visibility.** The owner questioned whether the docked order slip should show all the time. Option to evaluate: hide the slip while the sheet is empty and dock it on the first "Add to sheet", at least on phones, where the empty bar uses about 10% of the screen.
+
 **Change policy:** the owner must approve any feature, content, or suggestion beyond what's listed here before it is built.
 
 ## Brand Commitments

@@ -161,6 +161,15 @@
     return el("div", { class: "ph-object" + (isClicker && !wide ? " ph-object--wide" : ""), text: "Photo coming soon" });
   };
   const reduceMotion = () => window.matchMedia("(prefers-reduced-motion: reduce)").matches;
+  const isPhone = () => window.matchMedia("(max-width: 640px)").matches;
+  /* build_shop.py writes an 800px copy of every photo to products/800/ for phones */
+  const srcset = (src) => /assets\/img\/products\/[^/]+\.jpg$/.test(src)
+    ? `${src.replace("assets/img/products/", "assets/img/products/800/")} 800w, ${src} 1600w` : null;
+  const photoImg = (src, alt, sizes, extra = {}) => {
+    const set = srcset(src);
+    return el("img", { src, alt, decoding: "async", ...(set ? { srcset: set, sizes } : {}), ...extra });
+  };
+  const CARD_SIZES = "(max-width: 640px) calc(100vw - 40px), (max-width: 960px) 45vw, 330px";
 
   /* Product photos: a swipeable carousel when there's more than one. */
   function renderPhoto(target, p, wide) {
@@ -168,7 +177,7 @@
     const photos = p.photos && p.photos.length ? p.photos : p.photo ? [{ src: p.photo, alt: p.photoAlt || p.name }] : [];
     if (!photos.length) { target.append(placeholder(p, wide)); return; }
     const slides = photos.map((ph, i) => el("div", { class: "carousel__slide", role: "group", "aria-roledescription": "slide", "aria-label": `${i + 1} of ${photos.length}` },
-      el("img", { src: ph.src, alt: ph.alt, loading: "lazy", decoding: "async", draggable: "false" })));
+      photoImg(ph.src, ph.alt, CARD_SIZES, { loading: "lazy", draggable: "false" })));
     const track = el("div", { class: "carousel__track" }, ...slides);
     const ph = placeholder(p, wide);
     ph.hidden = true;
@@ -184,7 +193,13 @@
     const count = el("span", { class: "carousel__count", "aria-hidden": "true" });
     box.append(prev, next, count);
 
-    const current = () => Math.round(track.scrollLeft / Math.max(1, track.clientWidth));
+    const current = () => {
+      if (!track.clientWidth) return 0; /* not laid out yet */
+      if (track.scrollLeft > 0 && track.scrollLeft + track.clientWidth >= track.scrollWidth - 2) return photos.length - 1;
+      let best = 0;
+      slides.forEach((sl, i) => { if (Math.abs(sl.offsetLeft - track.scrollLeft) < Math.abs(slides[best].offsetLeft - track.scrollLeft)) best = i; });
+      return best;
+    };
     const update = () => {
       const i = Math.min(photos.length - 1, current());
       count.textContent = `${i + 1} / ${photos.length}`;
@@ -228,8 +243,9 @@
     const media = $("[data-feature-media]");
     media.textContent = "";
     const header = shop.settings && shop.settings.headerPhoto;
-    if (header) media.append(el("img", { src: header, alt: "Stitched spines of handmade notepads, fanned out on a desk", decoding: "async" }));
-    else if (p.photo) media.append(el("img", { src: p.photo, alt: p.photoAlt || p.name, decoding: "async" }));
+    const FEATURE_SIZES = "(max-width: 960px) 100vw, 58vw";
+    if (header) media.append(photoImg(header, "Stitched spines of handmade notepads, fanned out on a desk", FEATURE_SIZES));
+    else if (p.photo) media.append(photoImg(p.photo, p.photoAlt || p.name, FEATURE_SIZES));
     /* The header photo is a group shot, so the label covers the featured
        item's whole category (e.g. every notepad) rather than one product. */
     const range = header ? shop.products.filter((x) => x.category === p.category) : [p];
@@ -266,12 +282,16 @@
     }
     if (sections.size === 1 && sections.has("")) {
       root.append(el("div", { class: "grid" }, ...list.map(renderProduct)));
+      renderShelf([]);
       return;
     }
     let n = 0;
+    const shelf = [];
     for (const [title, items] of sections) {
       const headId = `section-${++n}`;
-      root.append(el("section", { class: "category", "aria-labelledby": headId },
+      const id = `shop-${slugify(title || "more")}`;
+      shelf.push({ href: `#${id}`, name: title || "More", meta: `${items.length} ${items.length === 1 ? "item" : "items"}`, cloth: items[0].cloth });
+      root.append(el("section", { class: "category", id, "aria-labelledby": headId },
         el("div", { class: "category__head" },
           el("h3", { id: headId, text: title || "More" }),
           el("span", { class: "category__count", text: `${items.length} ${items.length === 1 ? "item" : "items"}` })
@@ -279,6 +299,27 @@
         el("div", { class: "grid" }, ...items.map(renderProduct))
       ));
     }
+    renderShelf(shelf);
+  }
+
+  const slugify = (t) => t.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+
+  /* Phones: a shelf of section tiles under the intro, one tap to each range.
+     Long section titles drop a leading "Handmade" / "3D-printed" to fit a third of the screen. */
+  function renderShelf(items) {
+    const nav = $("[data-jump]");
+    if (!nav) return;
+    nav.textContent = "";
+    if (!items.length) { nav.hidden = true; return; }
+    const custom = shop.settings && shop.settings.custom;
+    if (custom && $("#custom")) items = [...items, { href: "#custom", name: "Custom orders", meta: custom.open ? "Ask the maker" : "Paused for now", cloth: "pink" }];
+    const short = (t) => { const x = t.replace(/^(handmade|hand-made|3d-printed|3d printed)\s+/i, ""); return x.charAt(0).toUpperCase() + x.slice(1); };
+    for (const it of items) {
+      nav.append(el("a", { href: it.href, class: `jump__item cloth--${it.cloth || "lilac"}` },
+        el("span", { class: "jump__name", text: short(it.name) }),
+        el("span", { class: "jump__meta", text: it.meta })));
+    }
+    nav.hidden = false;
   }
 
   function renderProduct(p) {
@@ -298,8 +339,8 @@
     node.setAttribute("aria-labelledby", nameId);
 
     const price = $("[data-price]", node);
-    price.append(formatMoney(p.price));
-    if (p.bundle) price.append(el("span", { class: "bundle", text: ` · ${dealText(p)}` }));
+    price.append(el("span", { class: "product__amount", text: formatMoney(p.price) }));
+    if (p.bundle) price.append(el("span", { class: "bundle", text: dealText(p) }));
     $("[data-desc]", node).textContent = p.description || "";
     if (!p.description) $("[data-desc]", node).remove();
 
@@ -322,7 +363,10 @@
       note.hidden = !p.variantNote;
     }
 
-    $("[data-add]", node).addEventListener("click", () => addToSheet(p, selectedVariant(node, p)));
+    const add = $("[data-add]", node);
+    add.addEventListener("click", () => {
+      if (addToSheet(p, selectedVariant(node, p)) && isPhone()) flashAdded(add);
+    });
     const notify = $("[data-notify]", node);
     const form = $("[data-interest]", node);
     const formId = `interest-${p.id}`;
@@ -368,6 +412,8 @@
     add.hidden = stock === 0;
     add.disabled = remaining <= 0;
     add.textContent = remaining <= 0 && stock > 0 ? "All on your sheet" : "Add to sheet";
+    add.classList.remove("is-added");
+    clearTimeout(add._added);
     notify.hidden = stock !== 0 || !form.hidden;
     if (stock !== 0) { form.hidden = true; notify.setAttribute("aria-expanded", "false"); }
   }
@@ -379,16 +425,30 @@
     const stock = stockOf(p, variant);
     const line = findLine(p.id, variant);
     if (line) {
-      if (line.qty >= stock) return;
+      if (line.qty >= stock) return false;
       line.qty += 1;
     } else {
-      if (stock < 1) return;
+      if (stock < 1) return false;
       sheet.lines.push({ id: p.id, variant, qty: 1 });
     }
     saveSheet();
     renderSheet(true);
     syncAll();
     announce(`Added ${p.name}${variant ? `, ${variant}` : ""} to your order sheet.`);
+    return true;
+  }
+
+  /* A brief "added" state on the button itself, where the thumb is.
+     If that was the last one, syncProduct has already said "All on your sheet". */
+  function flashAdded(btn) {
+    if (btn.disabled) return;
+    clearTimeout(btn._added);
+    btn.classList.add("is-added");
+    btn.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="M5 12.5l4.5 4.5L19 7.5"/></svg><span>Added to your sheet</span>';
+    btn._added = setTimeout(() => {
+      btn.classList.remove("is-added");
+      if (!btn.disabled) btn.textContent = "Add to sheet";
+    }, 1600);
   }
 
   function setQty(line, qty) {

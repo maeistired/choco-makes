@@ -13,7 +13,8 @@ Photos: drop originals in photos/ named after the product id
 variant, add the variant name: photos/grid-notepad-purple.heic. More shots
 of one product: photos/<id>-2.heic, -3 ... Shots shared by a whole deal group:
 photos/notepads-1.heic, -2 ... The photo at the top of the page: photos/header.heic.
-All are resized into assets/img/products/ automatically. Settings stay in data/shop.json.
+All are resized into assets/img/products/ automatically (plus 800px phone
+copies in assets/img/products/800/). Settings stay in data/shop.json.
 """
 import csv
 import json
@@ -29,6 +30,7 @@ UPDATES_CSV = ROOT / "inventory" / "updates.csv"
 SHOP_JSON = ROOT / "data" / "shop.json"
 PHOTO_IN = ROOT / "photos"
 PHOTO_OUT = ROOT / "assets" / "img" / "products"
+PHOTO_SMALL = PHOTO_OUT / "800"  # phone-sized copies, picked by the browser via srcset
 CLOTHS = {"lilac", "pink", "blue", "stone"}
 PHOTO_EXTS = (".jpg", ".jpeg", ".png", ".heic", ".webp")
 YES = {"yes", "y", "true", "1", "x"}
@@ -199,6 +201,12 @@ def photo_for(stem, label, write, used):
                         "-Z", "1600", str(src), "--out", str(out)],
                        check=True, capture_output=True)
         notes.append(f"Resized photo for '{label}'")
+    small = PHOTO_SMALL / out.name
+    if write and out.exists() and (not small.exists() or out.stat().st_mtime > small.stat().st_mtime):
+        PHOTO_SMALL.mkdir(parents=True, exist_ok=True)
+        subprocess.run(["sips", "-s", "format", "jpeg", "-s", "formatOptions", "78",
+                        "-Z", "800", str(out), "--out", str(small)],
+                       check=True, capture_output=True)
     if out.exists() or (src and not write):
         used.add(out.name)
         return f"assets/img/products/{stem}.jpg"
@@ -270,6 +278,10 @@ def attach_photos(shop, products, write):
             if old.name not in used:
                 old.unlink()
                 notes.append(f"Removed unused photo {old.relative_to(ROOT)}")
+    if write and PHOTO_SMALL.exists():
+        for old in PHOTO_SMALL.glob("*.jpg"):
+            if old.name not in used:
+                old.unlink()
 
 
 def main():

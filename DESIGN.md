@@ -201,7 +201,11 @@ Two-column splits use a 5:7 ratio (intro copy to feature panel; About side to bo
 
 The order slip is fixed to the bottom edge at 68px (72px under 640px) and the body reserves that height plus the safe-area inset.
 
-Responsive behaviour: at 960px and below the 5:7 splits collapse to one column (About body moves above the swatch). At 640px and below the grid is two columns with 32px/16px gaps, product descriptions and category tags hide, actions go full width, and order lines restack into a two-row grid. Below 380px the grid is one column. Wide but short screens (above 960px wide, at most 940px tall) flatten product tiles to 2:1 and trim the intro so the first product row clears the slip.
+Responsive behaviour: at 960px and below the 5:7 splits collapse to one column (About body moves above the swatch).
+
+Phones (640px and below) are the market first impression, so the first viewport leads with product: the feature photo runs edge to edge at 16:9 (2:1 when the screen is 700px tall or less) above a 1.75rem headline, and a **section shelf** replaces "Browse the shop". The shelf is three equal Sheet White tiles: serif section name, Graphite count, and an 8px strip of the section's book cloth (from its first product) along the top edge, linking to each shop section plus Custom orders. The shop grid is one column with 3:2 photo tiles and descriptions shown. Name and price share the first row; a bundle deal sits below as a small Sheet White tag with a hairline border and Bottle Green text. Photo carousels drop their arrow buttons for swipe, with the next photo peeking 32px; the count is a small white paper tag. Chips, actions and the sheet's stepper/remove are at least 44px. "Add to sheet" briefly becomes an outlined "✓ Added to your sheet" (1.6s). Order lines restack into a two-row grid. Gutters respect safe-area insets (`viewport-fit=cover`).
+
+Photos ship at 1600px with 800px copies in `assets/img/products/800/` (written by `tools/build_shop.py`), chosen by `srcset`. Wide but short screens (above 960px wide, at most 940px tall) flatten product tiles to 2:1 and trim the intro so the first product row clears the slip.
 
 ## Elevation & Depth
 
